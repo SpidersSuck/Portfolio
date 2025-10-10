@@ -167,6 +167,59 @@ The platform serves as both a functional gaming hub and a demonstration of profe
 
 ---
 
+### Sprint 4: Integration & Testing (Week 12)
+**Goal**: Comprehensive testing across browsers and devices, bug fixes, accessibility audit
+
+**Status**: Not started
+
+**Planned**:
+- [ ] Cross-browser testing (Chrome, Firefox, Safari, Edge)
+- [ ] Mobile device testing (iOS Safari, Chrome Android)
+- [ ] Accessibility audit with axe DevTools (target: 0 violations)
+- [ ] Screen reader testing (NVDA, JAWS)
+- [ ] Performance testing and optimization
+- [ ] Bug fixing and edge case handling
+- [ ] Code review and refactoring
+- [ ] Documentation updates based on changes
+
+---
+
+### Sprint 5: Refinement & Advanced Features (Week 13)
+**Goal**: Polish UI/UX, implement stretch goals if time permits, prepare for deployment
+
+**Status**: Not started
+
+**Planned**:
+- [ ] UI polish and animations
+- [ ] Loading states and error handling improvements
+- [ ] Consider stretch goals (additional game, authentication)
+- [ ] Deployment setup (Vercel/Netlify)
+- [ ] Performance optimization (code splitting, lazy loading)
+- [ ] SEO optimization (meta tags, Open Graph)
+- [ ] Final accessibility review
+- [ ] User testing with 3-5 people
+
+---
+
+### Sprint 6: Final Polish & Presentation Preparation (Week 14)
+**Goal**: Finalize all features, comprehensive testing, polish UI/UX, prepare presentation
+
+**Status**: Not started
+
+**Planned**:
+- [ ] Final bug fixes and polish
+- [ ] Complete demo video recording and editing
+- [ ] Create presentation slides for Week 15
+- [ ] Practice live demonstration (timing: 5 minutes)
+- [ ] Final documentation review and updates
+- [ ] README polish and portfolio presentation
+- [ ] GitHub repository cleanup and organization
+- [ ] Prepare reflection on learning outcomes
+- [ ] Test deployment and share live URL
+- [ ] Backup plan for live demo (video fallback)
+
+---
+
 ## 🎤 Week 15: Live Presentation (5 minutes)
 **Format**: Live demonstration during class
 - **30 seconds**: Project overview and MCP integration value proposition
