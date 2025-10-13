@@ -7,9 +7,6 @@
 ---
 
 ## 📋 Project Overview
-<img width="1893" height="870" alt="image" src="https://github.com/user-attachments/assets/e4fe2dc0-62bb-4824-b579-87f43374613b" />
-
-
 ![screenshot4](https://github.com/user-attachments/assets/bfee4b06-e401-41bd-80ad-eda6117bff95)
 
 
