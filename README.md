@@ -10,7 +10,7 @@
 <img width="1893" height="870" alt="image" src="https://github.com/user-attachments/assets/e4fe2dc0-62bb-4824-b579-87f43374613b" />
 
 
-The Mini Web Game Portal is an accessible, keyboard-first web application featuring three browser-based minigames (Tic-Tac-Toe, Snake, Memory Match). This project demonstrates how Model Context Protocol (MCP) transforms manual agent coordination into automated, robust multi-agent orchestration. Building on Assignment 3's foundation, Assignment 4 integrates MCP to coordinate three specialized AI agents (ChatGPT, DeepSeek, Gemini) through structured workflows that eliminate manual context handoffs, enable real-time error recovery, and ensure 100% information preservation across all agent transitions.
+The Mini Web Game Portal is an accessible, keyboard-first web application featuring over a dozen browser-based minigames (Tic-Tac-Toe, Snake, Memory Match, ect). This project demonstrates how Model Context Protocol (MCP) transforms manual agent coordination into automated, robust multi-agent orchestration. Building on Assignment 3's foundation, Assignment 4 integrates MCP to coordinate three specialized AI agents (ChatGPT, DeepSeek, Gemini) through structured workflows that eliminate manual context handoffs, enable real-time error recovery, and ensure 100% information preservation across all agent transitions.
 
 The platform serves as both a functional gaming hub and a demonstration of professional multi-agent development practices applicable to distributed teams and production systems.
 
