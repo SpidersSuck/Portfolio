@@ -1,7 +1,10 @@
 
-  # Mini Web Game Portal (Copy)
+  # Mini Web Game Portal
 
-  This is a code bundle for Mini Web Game Portal (Copy). The original project is available at https://www.figma.com/design/vaden8EFNWK10xVYLkiATw/Mini-Web-Game-Portal--Copy-.
+    ## Running the code preview image
+
+  <img width="1909" height="891" alt="image" src="https://github.com/user-attachments/assets/976cce8e-fd43-4561-8d5f-49ba0cccfcee" />
+
 
   ## Running the code
 
