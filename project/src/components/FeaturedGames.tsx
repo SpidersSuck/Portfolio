@@ -23,7 +23,7 @@ export function FeaturedGames({ games, onSelectGame, onNavigate }: FeaturedGames
 
   const featuredGames = [
     { ...games[1], description: 'Classic arcade meets modern design', difficulty: 'medium' as const },
-    { ...games[6], description: 'Timeless puzzle challenge', difficulty: 'easy' as const },
+    { ...games[0], description: 'Strategy showdown with AI opponents', difficulty: 'easy' as const },
     { ...games[3], description: 'Brick-smashing arcade action', difficulty: 'medium' as const },
   ];
 
@@ -55,7 +55,9 @@ export function FeaturedGames({ games, onSelectGame, onNavigate }: FeaturedGames
           transition={{ duration: 0.6 }}
         >
           <div className="text-xs uppercase tracking-[2px] text-[#06b6d4] mb-3">Spotlight</div>
-          <h2 className="text-5xl text-white mb-2">Featured Games</h2>
+          <h2 className="text-6xl md:text-7xl font-black italic tracking-tighter bg-gradient-to-r from-[#06b6d4] via-[#8b5cf6] to-[#ec4899] bg-clip-text text-transparent transform -skew-x-6 drop-shadow-[0_0_30px_rgba(139,92,246,0.5)]">
+            FEATURED GAMES
+          </h2>
           <p className="text-lg text-white/70">Top picks to get you started</p>
         </motion.div>
 
