@@ -58,16 +58,6 @@ export function GamePage({ gameId, onBack }: GamePageProps) {
           Back to Games
         </button>
 
-        {/* Game Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-center mb-8 text-[#e6eef6]"
-        >
-          {gameInfo.title}
-        </motion.h1>
-
         {/* Game Container */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

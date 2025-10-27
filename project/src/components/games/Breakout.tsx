@@ -2,18 +2,18 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RotateCcw, Heart, Pause, Play } from 'lucide-react';
 
-const CANVAS_WIDTH = 600;
-const CANVAS_HEIGHT = 500;
+const CANVAS_WIDTH = 500;
+const CANVAS_HEIGHT = 400;
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 15;
 const BALL_RADIUS = 8;
 const BRICK_ROWS = 5;
 const BRICK_COLS = 10;
-const BRICK_WIDTH = 54;
-const BRICK_HEIGHT = 20;
-const BRICK_PADDING = 6;
-const BRICK_OFFSET_TOP = 60;
-const BRICK_OFFSET_LEFT = 30;
+const BRICK_WIDTH = 42;
+const BRICK_HEIGHT = 18;
+const BRICK_PADDING = 5;
+const BRICK_OFFSET_TOP = 50;
+const BRICK_OFFSET_LEFT = 25;
 
 const BRICK_COLORS = ['#ef4444', '#f59e0b', '#f59e0b', '#10b981', '#06b6d4'];
 

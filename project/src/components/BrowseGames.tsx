@@ -1,6 +1,6 @@
 import { motion, useInView } from 'motion/react';
 import { useState, useRef } from 'react';
-import { Search, ChevronDown, Play, Circle, Users, X } from 'lucide-react';
+import { Search, ChevronDown, Play, Circle, X } from 'lucide-react';
 
 interface Game {
   id: string;
@@ -34,7 +34,6 @@ export function BrowseGames({ games, onSelectGame }: BrowseGamesProps) {
   const gamesWithMeta = games.map(game => ({
     ...game,
     difficulty: (['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]) as 'easy' | 'medium' | 'hard',
-    players: `${Math.floor(Math.random() * 2000 + 500)} played`,
   }));
 
   const categories = [
@@ -334,10 +333,7 @@ export function BrowseGames({ games, onSelectGame }: BrowseGamesProps) {
                 <div className="flex items-center gap-3 text-xs text-white/50">
                   <div className="flex items-center gap-1.5">
                     {getDifficultyDots(game.difficulty)}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Users size={12} />
-                    <span>{game.players}</span>
+                    <span className="capitalize">{game.difficulty}</span>
                   </div>
                 </div>
 

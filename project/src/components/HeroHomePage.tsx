@@ -13,100 +13,82 @@ interface HeroHomePageProps {
   onNavigate: (page: string) => void;
 }
 
-const allGames = [
-  { 
-    id: 'tictactoe', 
-    title: 'Tic-Tac-Toe', 
-    description: 'Classic X and O game', 
-    icon: Grid3x3, 
-    gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', 
-    category: 'strategy', 
-    difficulty: 'easy' as const,
-    image: 'https://images.unsplash.com/photo-1597840900616-664e930c29df?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: 'snake', 
-    title: 'Snake', 
-    description: 'Guide the snake to eat and grow', 
-    icon: Footprints, 
-    gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
-    category: 'arcade', 
-    difficulty: 'medium' as const,
-    image: 'https://images.unsplash.com/photo-1679110451343-f3e151ba42f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: 'memory', 
-    title: 'Memory Match', 
-    description: 'Find matching pairs of cards', 
-    icon: Brain, 
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', 
-    category: 'puzzle', 
-    difficulty: 'easy' as const,
-    image: 'https://images.unsplash.com/photo-1599666520394-50d845fe09c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: 'breakout', 
-    title: 'Breakout', 
-    description: 'Break bricks with a ball', 
-    icon: Blocks, 
-    gradient: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)', 
-    category: 'arcade', 
-    difficulty: 'medium' as const,
-    image: 'https://images.unsplash.com/photo-1616793958347-3e41632671d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: 'simon', 
-    title: 'Simon Says', 
-    description: 'Remember the color sequence', 
-    icon: Radio, 
-    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)', 
-    category: 'memory', 
-    difficulty: 'medium' as const,
-    image: 'https://images.unsplash.com/photo-1759171052927-83f3b3a72b2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: 'minesweeper', 
-    title: 'Minesweeper', 
-    description: 'Clear grid without mines', 
-    icon: Bomb, 
-    gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', 
-    category: 'puzzle', 
-    difficulty: 'hard' as const,
-    image: 'https://images.unsplash.com/photo-1608741869829-8eb30661c7be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: 'tetris', 
-    title: 'Tetris', 
-    description: 'Stack falling blocks perfectly', 
-    icon: Grid2x2, 
-    gradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)', 
-    category: 'puzzle', 
-    difficulty: 'easy' as const,
-    image: 'https://images.unsplash.com/photo-1555864400-cc47dd93d427?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: '2048', 
-    title: '2048', 
-    description: 'Merge tiles to reach 2048', 
-    icon: Grid2x2, 
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)', 
-    category: 'puzzle', 
-    difficulty: 'medium' as const,
-    image: 'https://images.unsplash.com/photo-1592509314528-afd0c8241a04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-  { 
-    id: 'pong', 
-    title: 'Pong', 
-    description: 'Classic paddle ball game', 
-    icon: Gamepad, 
-    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)', 
-    category: 'arcade', 
-    difficulty: 'easy' as const,
-    image: 'https://images.unsplash.com/photo-1731834451982-9476e9242f04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
-  },
-];
-
 export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
+  const games = [
+    {
+      id: 'tictactoe',
+      title: 'Tic-Tac-Toe',
+      description: 'Classic strategy game',
+      category: 'strategy',
+      difficulty: 'easy' as const,
+      image: '/game-thumbnails/tictactoe.svg'
+    },
+    {
+      id: 'snake',
+      title: 'Snake',
+      description: 'Eat and grow',
+      category: 'arcade',
+      difficulty: 'medium' as const,
+      image: '/game-thumbnails/snake.svg'
+    },
+    {
+      id: 'memory',
+      title: 'Memory Match',
+      description: 'Test your memory',
+      category: 'puzzle',
+      difficulty: 'easy' as const,
+      image: '/game-thumbnails/memory.svg'
+    },
+    {
+      id: 'breakout',
+      title: 'Breakout',
+      description: 'Break the bricks',
+      category: 'arcade',
+      difficulty: 'medium' as const,
+      image: '/game-thumbnails/breakout.svg'
+    },
+    {
+      id: 'simon',
+      title: 'Simon Says',
+      description: 'Repeat the pattern',
+      category: 'memory',
+      difficulty: 'medium' as const,
+      image: '/game-thumbnails/simon.svg'
+    },
+    {
+      id: 'minesweeper',
+      title: 'Minesweeper',
+      description: 'Clear the mines',
+      category: 'puzzle',
+      difficulty: 'hard' as const,
+      image: '/game-thumbnails/minesweeper.svg'
+    },
+    {
+      id: 'tetris',
+      title: 'Tetris',
+      description: 'Stack falling blocks',
+      category: 'puzzle',
+      difficulty: 'easy' as const,
+      image: '/game-thumbnails/tetris.svg'
+    },
+    {
+      id: '2048',
+      title: '2048',
+      description: 'Merge tiles to reach 2048',
+      category: 'puzzle',
+      difficulty: 'medium' as const,
+      image: '/game-thumbnails/2048.svg'
+    },
+    {
+      id: 'pong',
+      title: 'Pong',
+      description: 'Classic paddle game',
+      category: 'arcade',
+      difficulty: 'easy' as const,
+      image: '/game-thumbnails/pong.svg'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#071029]">
       {/* Hero Banner */}
@@ -169,7 +151,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
             className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
           >
             <button
-              onClick={() => onSelectGame(allGames[0].id)}
+              onClick={() => onSelectGame('tictactoe')}
               className="px-8 py-4 rounded-lg bg-gradient-to-r from-[#06b6d4] to-[#8b5cf6] text-white text-lg hover:scale-105 transition-all duration-200 flex items-center gap-2 justify-center shadow-lg shadow-[#06b6d4]/50"
             >
               <Play className="w-5 h-5" />
@@ -190,7 +172,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
             transition={{ delay: 0.8, duration: 0.8 }}
             className="text-[#9fb3c8] text-sm"
           >
-            {allGames.length}+ Games • 100% Free • No Downloads
+            9+ Games • 100% Free • No Downloads
           </motion.div>
         </div>
       </div>
@@ -199,7 +181,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       <QuickStats />
 
       {/* Featured Games Section */}
-      <FeaturedGames games={allGames} onSelectGame={onSelectGame} onNavigate={onNavigate} />
+      <FeaturedGames games={games} onSelectGame={onSelectGame} onNavigate={onNavigate} />
 
       {/* How It Works Section */}
       <HowItWorks />

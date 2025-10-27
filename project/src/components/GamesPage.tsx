@@ -34,7 +34,7 @@ const allGames: Game[] = [
     rating: 4.2,
     playtime: '5 min',
     features: ['2 Players', 'Quick Match', 'Strategy'],
-    image: 'https://images.unsplash.com/photo-1597840900616-664e930c29df?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/tictactoe.svg'
   },
   { 
     id: 'snake', 
@@ -47,7 +47,7 @@ const allGames: Game[] = [
     rating: 4.7,
     playtime: '10 min',
     features: ['High Score', 'Endless', 'Arcade'],
-    image: 'https://images.unsplash.com/photo-1679110451343-f3e151ba42f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/snake.svg'
   },
   { 
     id: 'memory', 
@@ -60,7 +60,7 @@ const allGames: Game[] = [
     rating: 4.5,
     playtime: '8 min',
     features: ['Brain Training', 'Memory', 'Timed'],
-    image: 'https://images.unsplash.com/photo-1599666520394-50d845fe09c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/memory.svg'
   },
   { 
     id: 'breakout', 
@@ -73,7 +73,7 @@ const allGames: Game[] = [
     rating: 4.6,
     playtime: '15 min',
     features: ['Power-ups', 'Levels', 'Classic'],
-    image: 'https://images.unsplash.com/photo-1616793958347-3e41632671d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/breakout.svg'
   },
   { 
     id: 'simon', 
@@ -86,7 +86,7 @@ const allGames: Game[] = [
     rating: 4.3,
     playtime: '12 min',
     features: ['Pattern Memory', 'Progressive', 'Sound'],
-    image: 'https://images.unsplash.com/photo-1759171052927-83f3b3a72b2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/simon.svg'
   },
   { 
     id: 'minesweeper', 
@@ -99,7 +99,7 @@ const allGames: Game[] = [
     rating: 4.8,
     playtime: '20 min',
     features: ['Logic', 'Strategy', 'Classic'],
-    image: 'https://images.unsplash.com/photo-1608741869829-8eb30661c7be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/minesweeper.svg'
   },
   { 
     id: 'tetris', 
@@ -112,7 +112,7 @@ const allGames: Game[] = [
     rating: 4.9,
     playtime: '30 min',
     features: ['Classic', 'Endless', 'High Score'],
-    image: 'https://images.unsplash.com/photo-1555864400-cc47dd93d427?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/tetris.svg'
   },
   { 
     id: '2048', 
@@ -125,7 +125,7 @@ const allGames: Game[] = [
     rating: 4.4,
     playtime: '15 min',
     features: ['Math', 'Strategy', 'Addictive'],
-    image: 'https://images.unsplash.com/photo-1592509314528-afd0c8241a04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/2048.svg'
   },
   { 
     id: 'pong', 
@@ -138,7 +138,7 @@ const allGames: Game[] = [
     rating: 4.1,
     playtime: '10 min',
     features: ['2 Players', 'Retro', 'Fast-Paced'],
-    image: 'https://images.unsplash.com/photo-1731834451982-9476e9242f04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'
+    image: '/game-thumbnails/pong.svg'
   },
 ];
 
@@ -316,7 +316,7 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="bg-[#081522]/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-8"
+          className="bg-[#081522]/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-8 relative z-50"
         >
           {/* Search Bar */}
           <div className="relative mb-6">

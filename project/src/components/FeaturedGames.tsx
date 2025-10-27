@@ -1,7 +1,6 @@
 import { motion, useInView } from 'motion/react';
-import { Play, ArrowRight, Users, Circle } from 'lucide-react';
+import { Play, ArrowRight, Circle } from 'lucide-react';
 import { useRef } from 'react';
-import { unsplash_tool } from '../lib/unsplash';
 
 interface Game {
   id: string;
@@ -9,7 +8,6 @@ interface Game {
   description: string;
   category: string;
   difficulty: 'easy' | 'medium' | 'hard';
-  players?: string;
   image?: string;
 }
 
@@ -24,9 +22,9 @@ export function FeaturedGames({ games, onSelectGame, onNavigate }: FeaturedGames
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   const featuredGames = [
-    { ...games[1], description: 'Classic arcade meets modern design', difficulty: 'medium' as const, players: '1.2K played' },
-    { ...games[6], description: 'Timeless puzzle challenge', difficulty: 'easy' as const, players: '2.5K played' },
-    { ...games[3], description: 'Brick-smashing arcade action', difficulty: 'medium' as const, players: '980 played' },
+    { ...games[1], description: 'Classic arcade meets modern design', difficulty: 'medium' as const },
+    { ...games[6], description: 'Timeless puzzle challenge', difficulty: 'easy' as const },
+    { ...games[3], description: 'Brick-smashing arcade action', difficulty: 'medium' as const },
   ];
 
   const getDifficultyDots = (difficulty: 'easy' | 'medium' | 'hard') => {
@@ -139,10 +137,6 @@ export function FeaturedGames({ games, onSelectGame, onNavigate }: FeaturedGames
                   <div className="flex items-center gap-2">
                     {getDifficultyDots(game.difficulty)}
                     <span className="capitalize">{game.difficulty}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Users size={14} />
-                    <span>{game.players}</span>
                   </div>
                 </div>
 

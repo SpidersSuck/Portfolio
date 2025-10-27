@@ -5,7 +5,7 @@ import { RotateCcw } from 'lucide-react';
 type Grid = number[][];
 
 const GRID_SIZE = 4;
-const CELL_SIZE = 120;
+const CELL_SIZE = 80;
 
 const TILE_COLORS: Record<number, { bg: string; text: string }> = {
   2: { bg: '#eee4da', text: '#776e65' },

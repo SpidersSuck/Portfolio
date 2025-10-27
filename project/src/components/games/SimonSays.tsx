@@ -156,7 +156,7 @@ export function SimonSays() {
               whileTap={{ scale: isUserTurn ? 0.95 : 1 }}
               onClick={() => handleColorClick(color)}
               disabled={!isUserTurn || isShowingSequence}
-              className="w-32 h-32 rounded-2xl transition-all duration-150 shadow-lg disabled:cursor-not-allowed"
+              className="w-24 h-24 rounded-2xl transition-all duration-150 shadow-lg disabled:cursor-not-allowed"
               style={{
                 backgroundColor: activeColor === color ? COLORS[color].active : COLORS[color].bg,
                 opacity: activeColor === color ? 1 : 0.7,

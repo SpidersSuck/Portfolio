@@ -137,7 +137,7 @@ export function MemoryMatch() {
               whileHover={{ scale: card.isFlipped || card.isMatched ? 1 : 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleCardClick(card.id)}
-              className="relative w-20 h-20 rounded-lg"
+              className="relative w-16 h-16 rounded-lg"
               disabled={card.isFlipped || card.isMatched}
             >
               <motion.div

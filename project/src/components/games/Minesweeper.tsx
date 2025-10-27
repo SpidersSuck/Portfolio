@@ -177,9 +177,9 @@ export function Minesweeper() {
 
   const getCellSize = () => {
     const config = DIFFICULTIES[difficulty];
-    if (config.rows <= 8) return 'w-10 h-10 text-base';
-    if (config.rows <= 12) return 'w-8 h-8 text-sm';
-    return 'w-6 h-6 text-xs';
+    if (config.rows <= 8) return 'w-8 h-8 text-sm';
+    if (config.rows <= 12) return 'w-6 h-6 text-xs';
+    return 'w-5 h-5 text-xs';
   };
 
   return (

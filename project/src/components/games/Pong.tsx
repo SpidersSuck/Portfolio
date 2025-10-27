@@ -2,10 +2,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RotateCcw } from 'lucide-react';
 
-const CANVAS_WIDTH = 800;
-const CANVAS_HEIGHT = 600;
+const CANVAS_WIDTH = 600;
+const CANVAS_HEIGHT = 400;
 const PADDLE_WIDTH = 15;
-const PADDLE_HEIGHT = 100;
+const PADDLE_HEIGHT = 80;
 const BALL_SIZE = 12;
 const WINNING_SCORE = 7;
 
