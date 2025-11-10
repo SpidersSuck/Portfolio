@@ -41,7 +41,9 @@ export function BrowseGames({ games, onSelectGame }: BrowseGamesProps) {
     { id: 'arcade', name: 'Arcade', count: games.filter(g => g.category === 'arcade').length },
     { id: 'puzzle', name: 'Puzzle', count: games.filter(g => g.category === 'puzzle').length },
     { id: 'strategy', name: 'Strategy', count: games.filter(g => g.category === 'strategy').length },
-    { id: 'memory', name: 'Memory', count: games.filter(g => g.category === 'memory').length },
+    { id: 'shooter', name: 'Shooter', count: games.filter(g => g.category === 'shooter').length },
+    { id: 'casual', name: 'Casual', count: games.filter(g => g.category === 'casual').length },
+    { id: 'sports', name: 'Sports', count: games.filter(g => g.category === 'sports').length },
   ];
 
   const difficulties = [
@@ -59,9 +61,19 @@ export function BrowseGames({ games, onSelectGame }: BrowseGamesProps) {
   ];
 
   const filteredGames = gamesWithMeta
-    .filter(game => 
-      searchQuery ? game.title.toLowerCase().includes(searchQuery.toLowerCase()) : true
-    )
+    .filter(game => {
+      if (!searchQuery) return true;
+      
+      const query = searchQuery.toLowerCase();
+      const searchableText = [
+        game.title,
+        game.description,
+        game.category,
+        game.difficulty
+      ].join(' ').toLowerCase();
+      
+      return searchableText.includes(query);
+    })
     .filter(game => 
       selectedCategory !== 'all' ? game.category === selectedCategory : true
     )
@@ -118,7 +130,7 @@ export function BrowseGames({ games, onSelectGame }: BrowseGamesProps) {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search games..."
+            placeholder="Search by name, genre, difficulty..."
             className="w-full h-14 pl-14 pr-12 rounded-xl bg-white/5 border-2 border-white/10 text-white placeholder:text-white/50 focus:border-[#06b6d4] focus:bg-white/8 focus:shadow-[0_0_0_4px_rgba(6,182,212,0.2)] outline-none transition-all duration-200"
           />
           {searchQuery && (

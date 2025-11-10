@@ -22,8 +22,8 @@ export function FeaturedGames({ games, onSelectGame, onNavigate }: FeaturedGames
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   const featuredGames = [
+    { ...games[9], description: 'The legendary arcade maze game', difficulty: 'medium' as const },
     { ...games[1], description: 'Classic arcade meets modern design', difficulty: 'medium' as const },
-    { ...games[0], description: 'Strategy showdown with AI opponents', difficulty: 'easy' as const },
     { ...games[3], description: 'Brick-smashing arcade action', difficulty: 'medium' as const },
   ];
 

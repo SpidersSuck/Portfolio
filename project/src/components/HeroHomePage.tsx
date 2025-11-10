@@ -72,12 +72,12 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       image: '/game-thumbnails/tetris.svg'
     },
     {
-      id: '2048',
-      title: '2048',
-      description: 'Merge tiles to reach 2048',
-      category: 'puzzle',
+      id: 'asteroids',
+      title: 'Asteroids',
+      description: 'Destroy asteroids in space',
+      category: 'arcade',
       difficulty: 'medium' as const,
-      image: '/game-thumbnails/2048.svg'
+      image: '/game-thumbnails/asteroids.svg'
     },
     {
       id: 'pong',
@@ -86,6 +86,14 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       category: 'arcade',
       difficulty: 'easy' as const,
       image: '/game-thumbnails/pong.svg'
+    },
+    {
+      id: 'pacman',
+      title: 'Pac-Man',
+      description: 'The legendary arcade maze game',
+      category: 'arcade',
+      difficulty: 'medium' as const,
+      image: '/game-thumbnails/pacman.svg'
     }
   ];
 

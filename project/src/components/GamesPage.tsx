@@ -1,7 +1,7 @@
 import { motion, useInView } from 'motion/react';
 import { useState, useRef } from 'react';
 import { Search, ChevronDown, Play, Circle, Users, X, Filter, SlidersHorizontal, Star, Clock, Trophy, Zap } from 'lucide-react';
-import { Grid3x3, Footprints, Brain, Blocks, Radio, Bomb, Grid2x2, Gamepad } from 'lucide-react';
+import { Grid3x3, Footprints, Brain, Blocks, Gamepad, Bird, Snowflake, Rocket, Ghost } from 'lucide-react';
 
 interface Game {
   id: string;
@@ -33,7 +33,7 @@ const allGames: Game[] = [
     difficulty: 'easy',
     rating: 4.2,
     playtime: '5 min',
-    features: ['2 Players', 'Quick Match', 'Strategy'],
+    features: ['Strategy', '2 Players', 'Quick Match', 'Logic'],
     image: '/game-thumbnails/tictactoe.svg'
   },
   { 
@@ -46,7 +46,7 @@ const allGames: Game[] = [
     difficulty: 'medium',
     rating: 4.7,
     playtime: '10 min',
-    features: ['High Score', 'Endless', 'Arcade'],
+    features: ['Arcade', 'High Score', 'Endless', 'Retro', 'Action'],
     image: '/game-thumbnails/snake.svg'
   },
   { 
@@ -59,7 +59,7 @@ const allGames: Game[] = [
     difficulty: 'easy',
     rating: 4.5,
     playtime: '8 min',
-    features: ['Brain Training', 'Memory', 'Timed'],
+    features: ['Puzzle', 'Brain Training', 'Memory', 'Timed', 'Educational'],
     image: '/game-thumbnails/memory.svg'
   },
   { 
@@ -72,60 +72,60 @@ const allGames: Game[] = [
     difficulty: 'medium',
     rating: 4.6,
     playtime: '15 min',
-    features: ['Power-ups', 'Levels', 'Classic'],
+    features: ['Arcade', 'Power-ups', 'Levels', 'Classic', 'Action'],
     image: '/game-thumbnails/breakout.svg'
   },
   { 
-    id: 'simon', 
-    title: 'Simon Says', 
-    description: 'Remember and repeat the color sequence patterns', 
-    icon: Radio, 
-    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)', 
-    category: 'memory', 
+    id: 'flappybird', 
+    title: 'Flappy Bird', 
+    description: 'Tap to fly through pipes in this addictive arcade game', 
+    icon: Bird, 
+    gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+    category: 'arcade', 
     difficulty: 'medium',
-    rating: 4.3,
-    playtime: '12 min',
-    features: ['Pattern Memory', 'Progressive', 'Sound'],
-    image: '/game-thumbnails/simon.svg'
+    rating: 4.7,
+    playtime: '10 min',
+    features: ['Arcade', 'One-Tap', 'Endless', 'Addictive', 'Challenging'],
+    image: '/game-thumbnails/flappybird.svg'
   },
   { 
-    id: 'minesweeper', 
-    title: 'Minesweeper', 
-    description: 'Clear the grid without triggering any hidden mines', 
-    icon: Bomb, 
+    id: 'winter-bells', 
+    title: 'Winter Bells', 
+    description: 'Click bells to keep the rabbit bouncing higher in this peaceful winter game', 
+    icon: Snowflake, 
+    gradient: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)', 
+    category: 'casual', 
+    difficulty: 'easy',
+    rating: 4.7,
+    playtime: '10 min',
+    features: ['Casual', 'Relaxing', 'Combo System', 'Musical', 'Peaceful'],
+    image: '/game-thumbnails/winterbells.svg'
+  },
+  { 
+    id: 'space-invaders', 
+    title: 'Space Invaders', 
+    description: 'Defend Earth from waves of alien invaders', 
+    icon: Rocket, 
     gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', 
-    category: 'puzzle', 
-    difficulty: 'hard',
+    category: 'shooter', 
+    difficulty: 'medium',
     rating: 4.8,
     playtime: '20 min',
-    features: ['Logic', 'Strategy', 'Classic'],
-    image: '/game-thumbnails/minesweeper.svg'
+    features: ['Shooter', 'Classic', 'Waves', 'Retro', 'Action'],
+    image: '/game-thumbnails/spaceinvaders.svg'
   },
   { 
-    id: 'tetris', 
-    title: 'Tetris', 
-    description: 'Stack falling blocks perfectly to clear lines', 
-    icon: Grid2x2, 
-    gradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)', 
-    category: 'puzzle', 
-    difficulty: 'easy',
-    rating: 4.9,
-    playtime: '30 min',
-    features: ['Classic', 'Endless', 'High Score'],
-    image: '/game-thumbnails/tetris.svg'
-  },
-  { 
-    id: '2048', 
-    title: '2048', 
-    description: 'Merge tiles to reach the coveted 2048 tile', 
-    icon: Grid2x2, 
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)', 
-    category: 'puzzle', 
+    id: 'asteroids', 
+    title: 'Asteroids', 
+    description: 'Navigate space and destroy asteroids in this classic arcade shooter', 
+    icon: Zap, 
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)', 
+    category: 'shooter', 
     difficulty: 'medium',
-    rating: 4.4,
-    playtime: '15 min',
-    features: ['Math', 'Strategy', 'Addictive'],
-    image: '/game-thumbnails/2048.svg'
+    rating: 4.8,
+    playtime: '12 min',
+    features: ['Shooter', 'Action', 'Space', 'Retro', 'Physics'],
+    image: '/game-thumbnails/asteroids.svg'
   },
   { 
     id: 'pong', 
@@ -133,12 +133,25 @@ const allGames: Game[] = [
     description: 'Classic paddle ball game that started it all', 
     icon: Gamepad, 
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)', 
-    category: 'arcade', 
+    category: 'sports', 
     difficulty: 'easy',
     rating: 4.1,
     playtime: '10 min',
-    features: ['2 Players', 'Retro', 'Fast-Paced'],
+    features: ['Sports', '2 Players', 'Retro', 'Fast-Paced', 'Classic'],
     image: '/game-thumbnails/pong.svg'
+  },
+  { 
+    id: 'pacman', 
+    title: 'Pac-Man', 
+    description: 'The legendary arcade maze game - eat dots and avoid ghosts', 
+    icon: Ghost, 
+    gradient: 'linear-gradient(135deg, #ffff00 0%, #ffaa00 100%)', 
+    category: 'arcade', 
+    difficulty: 'medium',
+    rating: 5.0,
+    playtime: '15 min',
+    features: ['Arcade', 'Classic', 'Retro', 'Legendary', 'Maze'],
+    image: '/game-thumbnails/pacman.svg'
   },
 ];
 
@@ -160,7 +173,9 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
     { id: 'arcade', name: 'Arcade', count: allGames.filter(g => g.category === 'arcade').length },
     { id: 'puzzle', name: 'Puzzle', count: allGames.filter(g => g.category === 'puzzle').length },
     { id: 'strategy', name: 'Strategy', count: allGames.filter(g => g.category === 'strategy').length },
-    { id: 'memory', name: 'Memory', count: allGames.filter(g => g.category === 'memory').length },
+    { id: 'shooter', name: 'Shooter', count: allGames.filter(g => g.category === 'shooter').length },
+    { id: 'casual', name: 'Casual', count: allGames.filter(g => g.category === 'casual').length },
+    { id: 'sports', name: 'Sports', count: allGames.filter(g => g.category === 'sports').length },
   ];
 
   const difficulties = [
@@ -178,10 +193,20 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
   ];
 
   const filteredGames = allGames
-    .filter(game => 
-      searchQuery ? game.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                    game.description.toLowerCase().includes(searchQuery.toLowerCase()) : true
-    )
+    .filter(game => {
+      if (!searchQuery) return true;
+      
+      const query = searchQuery.toLowerCase();
+      const searchableText = [
+        game.title,
+        game.description,
+        game.category,
+        game.difficulty,
+        ...(game.features || [])
+      ].join(' ').toLowerCase();
+      
+      return searchableText.includes(query);
+    })
     .filter(game => 
       selectedCategory !== 'all' ? game.category === selectedCategory : true
     )
@@ -225,7 +250,7 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
 
         {/* Floating Game Icons */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[Grid3x3, Gamepad, Brain, Bomb, Radio, Footprints].map((Icon, i) => (
+          {[Grid3x3, Gamepad, Brain, Bird, Rocket, Footprints].map((Icon, i) => (
             <motion.div
               key={i}
               className="absolute text-white/5"
@@ -319,13 +344,13 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
           className="bg-[#081522]/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-8 relative z-50"
         >
           {/* Search Bar */}
-          <div className="relative mb-6">
+          <div className="relative mb-4">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#06b6d4]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by game name or description..."
+              placeholder="Search by name, genre, difficulty, or features..."
               className="w-full h-14 pl-14 pr-12 rounded-xl bg-[#071029] border-2 border-white/10 text-white placeholder:text-white/40 focus:border-[#06b6d4] focus:shadow-[0_0_0_4px_rgba(6,182,212,0.1)] outline-none transition-all duration-200"
             />
             {searchQuery && (
@@ -337,6 +362,22 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
               </button>
             )}
           </div>
+
+          {/* Search Examples */}
+          {!searchQuery && (
+            <div className="mb-6 flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-white/50">Try searching:</span>
+              {['arcade', 'easy', 'strategy', 'relaxing', 'retro', '2 players'].map(example => (
+                <button
+                  key={example}
+                  onClick={() => setSearchQuery(example)}
+                  className="px-3 py-1 rounded-full bg-white/5 text-white/60 hover:bg-[#06b6d4]/20 hover:text-[#06b6d4] transition-colors"
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Filters Row */}
           <div className="flex flex-wrap items-center gap-4">
@@ -518,8 +559,15 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
                     </>
                   )}
                   <div className="absolute top-4 left-4 flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-[#081522]/80 backdrop-blur-sm text-xs text-[#06b6d4] border border-[#06b6d4]/30">
+                    <span className="px-3 py-1 rounded-full bg-[#081522]/80 backdrop-blur-sm text-xs text-[#06b6d4] border border-[#06b6d4]/30 capitalize">
                       {game.category}
+                    </span>
+                    <span className={`px-2 py-1 rounded-full bg-[#081522]/80 backdrop-blur-sm text-xs border capitalize ${
+                      game.difficulty === 'easy' ? 'text-green-400 border-green-400/30' :
+                      game.difficulty === 'medium' ? 'text-yellow-400 border-yellow-400/30' :
+                      'text-red-400 border-red-400/30'
+                    }`}>
+                      {game.difficulty}
                     </span>
                   </div>
                   <div className="absolute top-4 right-4 flex items-center gap-1 px-2 py-1 rounded-full bg-[#081522]/80 backdrop-blur-sm">
@@ -596,7 +644,20 @@ export function GamesPage({ onSelectGame, onNavigate }: GamesPageProps) {
               <Search size={48} className="text-white/20" />
             </div>
             <h3 className="text-2xl text-white mb-2">No games found</h3>
-            <p className="text-white/60 mb-6">Try adjusting your filters or search query</p>
+            <p className="text-white/60 mb-6">
+              Try searching for genres like "arcade", difficulties like "easy", or features like "retro"
+            </p>
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {['arcade', 'puzzle', 'easy', 'strategy', 'casual'].map(suggestion => (
+                <button
+                  key={suggestion}
+                  onClick={() => setSearchQuery(suggestion)}
+                  className="px-4 py-2 rounded-lg bg-white/10 text-white/70 hover:bg-[#06b6d4]/20 hover:text-[#06b6d4] transition-colors"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => {
                 setSearchQuery('');

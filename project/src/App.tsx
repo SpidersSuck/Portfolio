@@ -23,7 +23,7 @@ export default function App() {
           '5': 'simon',
           '6': 'minesweeper',
           '7': 'tetris',
-          '8': '2048',
+          '8': 'asteroids',
           '9': 'pong',
         };
 
@@ -69,7 +69,7 @@ export default function App() {
     }
   };
 
-  const isGameView = ['tictactoe', 'snake', 'memory', 'breakout', 'simon', 'minesweeper', 'tetris', '2048', 'pong'].includes(currentView);
+  const isGameView = ['tictactoe', 'snake', 'memory', 'breakout', 'asteroids', 'pong', 'winter-bells', 'flappy-bird', 'space-invaders', 'pacman'].includes(currentView);
 
   // Determine the current page for navbar highlighting
   const getCurrentPage = () => {
