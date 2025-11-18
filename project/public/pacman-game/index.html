@@ -51,6 +51,53 @@
     <canvas id='canvas'><div id="canvas-warning">Your browser does not support HTML Canvas.  Please upgrade!</div></canvas>
     <canvas id='atlas' style="display:none"></canvas>
 
+    <script>
+        // Volume control listener
+        var targetVolume = 0.5; // Default volume
+        var volumeApplied = false;
+        var maxRetries = 20;
+        var retryCount = 0;
+        
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'setVolume') {
+                targetVolume = event.data.volume;
+                retryCount = 0; // Reset retry count on new volume change
+                applyVolume();
+            }
+        });
+        
+        function applyVolume() {
+            try {
+                // Wait for gameAudio object to be initialized
+                if (typeof window.gameAudio === 'undefined' || !window.gameAudio) {
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        setTimeout(applyVolume, 100);
+                    }
+                    return;
+                }
+                
+                // Use the global setVolume method
+                if (typeof window.gameAudio.setGlobalVolume === 'function') {
+                    window.gameAudio.setGlobalVolume(targetVolume);
+                    volumeApplied = true;
+                } else {
+                    console.error('setGlobalVolume method not found');
+                }
+            } catch (e) {
+                console.error('Error applying volume:', e);
+            }
+        }
+        
+        // Apply initial volume once the game loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                retryCount = 0;
+                applyVolume();
+            }, 1000);
+        });
+    </script>
+
 </body>
 
 </html>

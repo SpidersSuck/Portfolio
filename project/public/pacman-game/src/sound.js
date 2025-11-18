@@ -2,11 +2,28 @@
 
 var audio = new preloadAudio();
 
+// Expose audio globally for volume control
+window.gameAudio = audio;
+
 function audioTrack(url, volume) {
     var audio = new Audio(url);
     if (volume) audio.volume = volume;
     audio.load();
     var looping = false;
+    
+    // Expose the audio element for external volume control
+    this.audioElement = audio;
+    
+    this.setVolume = function(vol) {
+        try {
+            if (audio && typeof vol === 'number' && !isNaN(vol)) {
+                audio.volume = Math.max(0, Math.min(1, vol));
+            }
+        } catch (e) {
+            console.error('Error setting volume:', e);
+        }
+    };
+    
     this.play = function(noResetTime) {
         playSound(noResetTime);
     };
@@ -68,16 +85,27 @@ function preloadAudio() {
     this.eating            = new audioTrack('sounds/eating.mp3', 0.5);
     this.startMusic        = new audioTrack('sounds/start-music.mp3');
 
+    // Add global setVolume method for all tracks
+    this.setGlobalVolume = function(vol) {
+        for (var key in this) {
+            if (this.hasOwnProperty(key) && 
+                typeof this[key] === 'object' && 
+                typeof this[key].setVolume === 'function') {
+                this[key].setVolume(vol);
+            }
+        }
+    };
+
     this.ghostReset = function(noResetTime) {
         for (var s in this) {
-            if (s == 'silence' || s == 'ghostReset' ) return;
+            if (s == 'silence' || s == 'ghostReset' || s == 'setGlobalVolume') return;
             if (s.match(/^ghost/)) this[s].stopLoop(noResetTime);
         }
     };
 
     this.silence = function(noResetTime) {
         for (var s in this) {
-            if (s == 'silence' || s == 'ghostReset' ) return;
+            if (s == 'silence' || s == 'ghostReset' || s == 'setGlobalVolume') return;
             this[s].stopLoop(noResetTime);
         }
     }

@@ -6,8 +6,8 @@ import { MemoryMatch } from './games/MemoryMatch';
 import { Breakout } from './games/Breakout';
 import { Asteroids } from './games/Asteroids';
 import { Pong } from './games/Pong';
-import { WinterBells } from './games/WinterBells';
 import { Pacman } from './games/Pacman';
+import Tetris from './games/Tetris';
 
 interface GamePageProps {
   gameId: string;
@@ -21,8 +21,8 @@ const GAME_INFO: Record<string, { title: string; component: React.ComponentType<
   breakout: { title: 'Breakout', component: Breakout },
   asteroids: { title: 'Asteroids', component: Asteroids },
   pong: { title: 'Pong', component: Pong },
-  'winter-bells': { title: 'Winter Bells', component: WinterBells },
   pacman: { title: 'Pac-Man', component: Pacman },
+  tetris: { title: 'Tetris', component: Tetris },
 };
 
 export function GamePage({ gameId, onBack }: GamePageProps) {

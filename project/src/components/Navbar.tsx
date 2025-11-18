@@ -53,9 +53,7 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
           >
             <User className="w-5 h-5 text-[#9fb3c8]" />
           </button>
-          <button className="w-10 h-10 rounded-full bg-[#081522] hover:bg-[#081522]/80 flex items-center justify-center transition-all duration-200 hover:scale-105">
-            <Settings className="w-5 h-5 text-[#9fb3c8]" />
-          </button>
+          {/* Removed gear (Settings) icon button */}
         </div>
       </div>
     </nav>

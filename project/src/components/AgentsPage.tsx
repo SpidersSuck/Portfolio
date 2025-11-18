@@ -29,7 +29,6 @@ export function AgentsPage({ onBack }: AgentsPageProps) {
       contributions: [
         'React component development',
         'Responsive grid systems',
-        'WCAG 2.1 AA accessibility',
         'CSS design system implementation',
       ],
       stats: '3 major components • 0 accessibility violations • Mobile-first design',
@@ -193,10 +192,16 @@ export function AgentsPage({ onBack }: AgentsPageProps) {
         <div className="text-center bg-gradient-to-r from-[#06b6d4]/10 to-[#8b5cf6]/10 rounded-xl p-8 border border-white/10">
           <h3 className="text-[#e6eef6] mb-4">Want to learn more about MCP coordination?</h3>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#06b6d4] to-[#8b5cf6] text-white hover:scale-105 transition-all duration-200">
+            <button
+              className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#06b6d4] to-[#8b5cf6] text-white hover:scale-105 transition-all duration-200"
+              onClick={() => window.open('https://github.com/WSU-CptS483/course-project-SpidersSuck.git', '_blank')}
+            >
               Read Technical Documentation
             </button>
-            <button className="px-6 py-3 rounded-lg bg-[#081522] text-[#e6eef6] border border-white/10 hover:border-white/30 transition-all duration-200">
+            <button
+              className="px-6 py-3 rounded-lg bg-[#081522] text-[#e6eef6] border border-white/10 hover:border-white/30 transition-all duration-200"
+              onClick={() => window.open('https://github.com/WSU-CptS483/course-project-SpidersSuck/tree/main/logs', '_blank')}
+            >
               View Development Logs
             </button>
           </div>

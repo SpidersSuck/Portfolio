@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { ArrowLeft, Target, BookOpen, Code, Accessibility } from 'lucide-react';
+import { ArrowLeft, Target, BookOpen, Code, Accessibility, Gamepad2 } from 'lucide-react';
 
 interface AboutPageProps {
   onBack: () => void;
@@ -12,7 +12,7 @@ export function AboutPage({ onBack, onNavigate }: AboutPageProps) {
       icon: '🎮',
       title: 'Foundation',
       subtitle: 'Assignment 3',
-      description: 'Built initial 6-game portal with manual agent coordination. Learned the challenges of context handoffs and integration conflicts.',
+      description: 'Built initial 3-game portal with manual agent coordination. Learned the challenges of context handoffs and integration conflicts.',
       timeline: 'Weeks 1-7',
       metric: '45 min coordination overhead per session',
     },
@@ -42,7 +42,7 @@ export function AboutPage({ onBack, onNavigate }: AboutPageProps) {
     { name: 'Canvas API', icon: '🖼️' },
     { name: 'localStorage', icon: '💾' },
     { name: 'MCP', icon: '🔗' },
-    { name: 'Figma', icon: '🎯' },
+    { name: 'Vite', icon: '⚡' },
   ];
 
   return (
@@ -179,24 +179,27 @@ export function AboutPage({ onBack, onNavigate }: AboutPageProps) {
           <div className="md:flex gap-8 items-start">
             <div className="mb-6 md:mb-0">
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#10b981] to-[#06b6d4] flex items-center justify-center text-5xl">
-                ♿
+                🎮
               </div>
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
-                <Accessibility className="w-8 h-8 text-[#10b981]" />
-                <h2 className="text-[#e6eef6]">Accessibility First</h2>
+                <Gamepad2 className="w-8 h-8 text-[#10b981]" />
+                <h2 className="text-[#e6eef6]">Game Features</h2>
               </div>
               <p className="text-[#9fb3c8] mb-4">
-                Every game is fully playable with keyboard controls alone. We follow WCAG 2.1 AA guidelines to ensure everyone can enjoy our games.
+                Enjoy a variety of browser games with these features:
               </p>
               <ul className="space-y-2">
                 {[
-                  'Full keyboard navigation (arrows, enter, space)',
-                  'Screen reader compatibility',
-                  'High contrast mode support',
-                  'Focus indicators on all interactive elements',
-                  'No time-based challenges (or pause available)',
+                  'Instant play, no downloads required',
+                  'Works on desktop and mobile',
+                  'High score tracking',
+                  'Multiple genres: puzzle, arcade, strategy, and more',
+                  'Modern UI with dark mode',
+                  'Quick game switching',
+                  'Pause and resume support',
+                  'No account needed',
                 ].map((feature, i) => (
                   <li key={i} className="flex items-start gap-2 text-[#9fb3c8]">
                     <span className="text-[#10b981] mt-1">✓</span>
@@ -233,7 +236,10 @@ export function AboutPage({ onBack, onNavigate }: AboutPageProps) {
             >
               Browse All Games
             </button>
-            <button className="px-6 py-3 rounded-lg bg-[#081522] text-[#e6eef6] border border-white/10 hover:border-white/30 transition-all duration-200">
+            <button
+              className="px-6 py-3 rounded-lg bg-[#081522] text-[#e6eef6] border border-white/10 hover:border-white/30 transition-all duration-200"
+              onClick={() => window.open('https://github.com/WSU-CptS483/course-project-SpidersSuck/tree/main/project', '_blank')}
+            >
               View Source Code
             </button>
           </div>

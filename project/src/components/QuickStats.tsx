@@ -27,8 +27,8 @@ export function QuickStats() {
     },
     {
       icon: Users,
-      value: '15+',
-      label: 'Keyboard Shortcuts',
+      value: 'Unlimited',
+      label: 'No downloads!',
       gradient: 'from-[#10b981] to-[#059669]',
     },
   ];

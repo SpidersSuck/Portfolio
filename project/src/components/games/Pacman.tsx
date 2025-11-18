@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Maximize2, Minimize2, RotateCcw, Info } from 'lucide-react';
+import { ArrowLeft, Maximize2, Minimize2, Info, Volume2, VolumeX } from 'lucide-react';
 
 interface PacmanProps {
   onBack: () => void;
@@ -9,8 +9,16 @@ interface PacmanProps {
 export function Pacman({ onBack }: PacmanProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [volume, setVolume] = useState(20);
+  const [isMuted, setIsMuted] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const gameUrl = `/pacman-game/index.html?v=${Date.now()}`;
+  const volumeStateRef = useRef({ volume: 20, isMuted: false });
+  const gameUrl = `/pacman-game/index.html`;
+
+  // Update volume state ref whenever volume or mute changes
+  useEffect(() => {
+    volumeStateRef.current = { volume, isMuted };
+  }, [volume, isMuted]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -21,6 +29,46 @@ export function Pacman({ onBack }: PacmanProps) {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
+  // Handle iframe load - apply saved volume
+  useEffect(() => {
+    const handleIframeLoad = () => {
+      // Give the game time to initialize, then apply the saved volume
+      setTimeout(() => {
+        applyCurrentVolume();
+      }, 1500);
+    };
+
+    const iframe = iframeRef.current;
+    if (iframe) {
+      iframe.addEventListener('load', handleIframeLoad);
+      return () => iframe.removeEventListener('load', handleIframeLoad);
+    }
+  }, []);
+
+  const applyCurrentVolume = () => {
+    if (iframeRef.current?.contentWindow) {
+      try {
+        const { volume: vol, isMuted: muted } = volumeStateRef.current;
+        const actualVolume = muted ? 0 : vol / 100;
+        iframeRef.current.contentWindow.postMessage({
+          type: 'setVolume',
+          volume: actualVolume
+        }, '*');
+      } catch (error) {
+        console.error('Error sending volume message:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Apply volume changes to the game with debouncing
+    const timer = setTimeout(() => {
+      applyCurrentVolume();
+    }, 150); // Debounce to prevent too many messages
+    
+    return () => clearTimeout(timer);
+  }, [volume, isMuted]);
+
   const toggleFullscreen = () => {
     if (!document.fullscreenElement && iframeRef.current) {
       iframeRef.current.requestFullscreen();
@@ -29,10 +77,8 @@ export function Pacman({ onBack }: PacmanProps) {
     }
   };
 
-  const reloadGame = () => {
-    if (iframeRef.current) {
-      iframeRef.current.src = `/pacman-game/index.html?v=${Date.now()}`;
-    }
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
   };
 
   return (
@@ -58,6 +104,33 @@ export function Pacman({ onBack }: PacmanProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Volume Control */}
+          <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
+            <button
+              onClick={toggleMute}
+              className="text-white hover:text-[#ffff00] transition-colors"
+              title={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={volume}
+              onChange={(e) => setVolume(Number(e.target.value))}
+              className="w-24 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer
+                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#ffff00] 
+                [&::-webkit-slider-thumb]:cursor-pointer
+                [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 
+                [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#ffff00] 
+                [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+              title={`Volume: ${volume}%`}
+            />
+            <span className="text-xs text-white/60 w-8">{volume}%</span>
+          </div>
+          
           <button
             onClick={() => setShowInfo(!showInfo)}
             className={`p-2 rounded-lg transition-colors ${
@@ -66,13 +139,6 @@ export function Pacman({ onBack }: PacmanProps) {
             title="Game Info"
           >
             <Info size={20} />
-          </button>
-          <button
-            onClick={reloadGame}
-            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-            title="Restart Game"
-          >
-            <RotateCcw size={20} />
           </button>
           <button
             onClick={toggleFullscreen}

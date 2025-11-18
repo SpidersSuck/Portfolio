@@ -1,0 +1,16 @@
+.profile-animated-border {
+  background: conic-gradient(from 0deg, #06b6d4, #8b5cf6, #ec4899, #06b6d4);
+  filter: blur(8px);
+  opacity: 0.7;
+  border-radius: 0.75rem;
+  animation: profile-spin 2s linear infinite;
+}
+
+@keyframes profile-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

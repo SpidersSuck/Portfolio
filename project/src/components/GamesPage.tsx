@@ -22,6 +22,7 @@ interface GamesPageProps {
   onNavigate: (page: string) => void;
 }
 
+// All available games - 10 total
 const allGames: Game[] = [
   { 
     id: 'tictactoe', 
@@ -76,18 +77,19 @@ const allGames: Game[] = [
     image: '/game-thumbnails/breakout.svg'
   },
   { 
-    id: 'flappybird', 
-    title: 'Flappy Bird', 
-    description: 'Tap to fly through pipes in this addictive arcade game', 
-    icon: Bird, 
-    gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
-    category: 'arcade', 
+    id: 'tetris', 
+    title: 'Tetris', 
+    description: 'Stack blocks to clear lines in this timeless puzzle game', 
+    icon: Blocks, 
+    gradient: 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)', 
+    category: 'puzzle', 
     difficulty: 'medium',
-    rating: 4.7,
-    playtime: '10 min',
-    features: ['Arcade', 'One-Tap', 'Endless', 'Addictive', 'Challenging'],
-    image: '/game-thumbnails/flappybird.svg'
+    rating: 4.9,
+    playtime: '12 min',
+    features: ['Puzzle', 'Classic', 'Stacking', 'Endless', 'Retro'],
+    image: '/game-thumbnails/tetris.svg'
   },
+  // Flappy Bird removed
   { 
     id: 'winter-bells', 
     title: 'Winter Bells', 
@@ -101,19 +103,7 @@ const allGames: Game[] = [
     features: ['Casual', 'Relaxing', 'Combo System', 'Musical', 'Peaceful'],
     image: '/game-thumbnails/winterbells.svg'
   },
-  { 
-    id: 'space-invaders', 
-    title: 'Space Invaders', 
-    description: 'Defend Earth from waves of alien invaders', 
-    icon: Rocket, 
-    gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', 
-    category: 'shooter', 
-    difficulty: 'medium',
-    rating: 4.8,
-    playtime: '20 min',
-    features: ['Shooter', 'Classic', 'Waves', 'Retro', 'Action'],
-    image: '/game-thumbnails/spaceinvaders.svg'
-  },
+  // Space Invaders removed
   { 
     id: 'asteroids', 
     title: 'Asteroids', 

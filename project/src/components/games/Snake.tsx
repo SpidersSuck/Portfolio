@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { RotateCcw, Pause, Play, Trophy, Zap } from 'lucide-react';
+import { RotateCcw, Pause, Play, Trophy, Zap, Info, Maximize2, Minimize2 } from 'lucide-react';
 
 type Position = { x: number; y: number };
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
@@ -22,7 +22,10 @@ export function Snake() {
   });
   const [isPaused, setIsPaused] = useState(false);
   const [speed, setSpeed] = useState(INITIAL_SPEED);
+  const [showInfo, setShowInfo] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const gameLoopRef = useRef<number | undefined>(undefined);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const generateFood = useCallback(() => {
     let newPos: Position;
@@ -44,6 +47,14 @@ export function Snake() {
     setGameOver(false);
     setIsPaused(false);
     setSpeed(INITIAL_SPEED);
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement && containerRef.current) {
+      containerRef.current.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
   };
 
   const moveSnake = useCallback(() => {
@@ -121,6 +132,14 @@ export function Snake() {
   }, [direction, gameOver]);
 
   useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
     if (!gameOver && !isPaused) {
       gameLoopRef.current = window.setInterval(moveSnake, speed);
     }
@@ -130,7 +149,7 @@ export function Snake() {
   }, [moveSnake, speed, gameOver, isPaused]);
 
   return (
-    <div className='fixed inset-0 w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden'>
+    <div ref={containerRef} className='fixed inset-0 w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden'>
       {/* Title */}
       <motion.div
         initial={{ opacity: 0, scale: 0.3, rotateX: -90 }}
@@ -340,6 +359,28 @@ export function Snake() {
               <RotateCcw className='w-4 h-4' />
               New Game
             </motion.button>
+            <div className='flex gap-2'>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowInfo(!showInfo)}
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold text-sm border-2 transition-all flex items-center justify-center gap-2 shadow-lg ${
+                  showInfo 
+                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 border-emerald-400/50 text-white' 
+                    : 'bg-gradient-to-r from-slate-700 to-slate-600 border-slate-500/50 text-slate-100 hover:border-slate-400'
+                }`}
+              >
+                <Info className='w-4 h-4' />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={toggleFullscreen}
+                className='flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-slate-700 to-slate-600 text-slate-100 font-semibold text-sm border-2 border-slate-500/50 hover:border-slate-400 transition-all flex items-center justify-center gap-2 shadow-lg'
+              >
+                {isFullscreen ? <Minimize2 className='w-4 h-4' /> : <Maximize2 className='w-4 h-4' />}
+              </motion.button>
+            </div>
           </motion.div>
         </div>
 
@@ -469,6 +510,57 @@ export function Snake() {
         </div>
       </motion.div>
       </div>
+
+      {/* Info Panel */}
+      <AnimatePresence>
+        {showInfo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className='fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50'
+            onClick={() => setShowInfo(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className='bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border-2 border-emerald-500/30 shadow-2xl max-w-2xl mx-4'
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className='text-3xl font-bold text-emerald-400 mb-4'>🐍 Snake Game</h2>
+              <div className='space-y-4 text-slate-300'>
+                <div>
+                  <h3 className='text-xl font-semibold text-emerald-300 mb-2'>How to Play</h3>
+                  <p>Guide the snake to eat the red food. Each food makes you longer and faster. Don't crash into yourself!</p>
+                </div>
+                <div>
+                  <h3 className='text-xl font-semibold text-emerald-300 mb-2'>Controls</h3>
+                  <ul className='list-disc list-inside space-y-1'>
+                    <li><span className='font-mono text-emerald-400'>Arrow Keys</span> or <span className='font-mono text-emerald-400'>WASD</span> - Move</li>
+                    <li><span className='font-mono text-emerald-400'>Space</span> - Pause/Resume</li>
+                    <li><span className='font-mono text-emerald-400'>R</span> - Restart Game</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className='text-xl font-semibold text-emerald-300 mb-2'>Tips</h3>
+                  <ul className='list-disc list-inside space-y-1'>
+                    <li>Plan your path ahead to avoid trapping yourself</li>
+                    <li>The game speeds up as you grow longer</li>
+                    <li>Your high score is saved locally</li>
+                  </ul>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowInfo(false)}
+                className='mt-6 w-full px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold hover:from-emerald-500 hover:to-teal-500 transition-all'
+              >
+                Got it!
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
