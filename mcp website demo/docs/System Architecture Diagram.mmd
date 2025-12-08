@@ -1,0 +1,36 @@
+graph TB
+    WEB[Web App] --> GRID[Game Grid]
+    GRID --> MOUNT[Mount Manager]
+    
+    MOUNT --> GAMES
+    MOUNT --> SCORE[Score Display]
+    MOUNT --> CTRL[Game Controls]
+    
+    subgraph GAMES
+        SNAKE[Snake]
+        PUZZLE[2048]
+        BREAK[Breakout]
+        MEM[Memory]
+        TOWER[Tower Defense]
+    end
+    
+    GAMES --> SCORE
+    GAMES --> CTRL
+    GAMES --> MODAL[Game Over]
+    
+    SCORE --> SESS[Game Session]
+    CTRL --> SESS
+    MODAL --> LEAD[Leaderboard]
+    
+    SESS --> STOR[Storage]
+    LEAD --> STOR
+
+    classDef ui fill:#3B82F6,stroke:#1E40AF,color:#fff
+    classDef container fill:#10B981,stroke:#059669,color:#fff
+    classDef games fill:#F59E0B,stroke:#D97706,color:#fff
+    classDef data fill:#EC4899,stroke:#DB2777,color:#fff
+    
+    class WEB,GRID ui
+    class MOUNT,SCORE,CTRL,MODAL container
+    class GAMES,SNAKE,PUZZLE,BREAK,MEM,TOWER games
+    class SESS,LEAD,STOR data

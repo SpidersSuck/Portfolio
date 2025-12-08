@@ -1,0 +1,63 @@
+﻿<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="snakeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <style>
+      @keyframes slither {
+        0% { transform: translate(0, 0); }
+        25% { transform: translate(10px, 5px); }
+        50% { transform: translate(0, 10px); }
+        75% { transform: translate(-10px, 5px); }
+        100% { transform: translate(0, 0); }
+      }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.8; }
+      }
+      @keyframes glow {
+        0%, 100% { filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6)); }
+        50% { filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.9)); }
+      }
+      .snake-body { animation: slither 3s ease-in-out infinite, glow 2s ease-in-out infinite; }
+      .food { animation: pulse 1.5s ease-in-out infinite; }
+      .segment-1 { animation-delay: 0s; }
+      .segment-2 { animation-delay: 0.1s; }
+      .segment-3 { animation-delay: 0.2s; }
+      .segment-4 { animation-delay: 0.3s; }
+    </style>
+  </defs>
+  
+  <!-- Dark background -->
+  <rect width="200" height="200" fill="#0f172a"/>
+  
+  <!-- Grid pattern -->
+  <g opacity="0.1">
+    <line x1="0" y1="50" x2="200" y2="50" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="100" x2="200" y2="100" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="150" x2="200" y2="150" stroke="#fff" stroke-width="0.5"/>
+    <line x1="50" y1="0" x2="50" y2="200" stroke="#fff" stroke-width="0.5"/>
+    <line x1="100" y1="0" x2="100" y2="200" stroke="#fff" stroke-width="0.5"/>
+    <line x1="150" y1="0" x2="150" y2="200" stroke="#fff" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Snake segments -->
+  <g class="snake-body">
+    <rect class="segment-1" x="90" y="70" width="20" height="20" rx="4" fill="url(#snakeGrad)" opacity="1"/>
+    <rect class="segment-2" x="70" y="70" width="20" height="20" rx="4" fill="url(#snakeGrad)" opacity="0.95"/>
+    <rect class="segment-3" x="50" y="70" width="20" height="20" rx="4" fill="url(#snakeGrad)" opacity="0.9"/>
+    <rect class="segment-4" x="50" y="90" width="20" height="20" rx="4" fill="url(#snakeGrad)" opacity="0.85"/>
+    <rect x="50" y="110" width="20" height="20" rx="4" fill="url(#snakeGrad)" opacity="0.8"/>
+    
+    <!-- Snake eyes on head -->
+    <circle cx="98" cy="78" r="2" fill="#0f172a"/>
+    <circle cx="102" cy="78" r="2" fill="#0f172a"/>
+  </g>
+  
+  <!-- Food (apple) -->
+  <g class="food">
+    <circle cx="140" cy="120" r="10" fill="#ef4444"/>
+    <path d="M 140 110 Q 135 105 138 102" stroke="#10b981" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

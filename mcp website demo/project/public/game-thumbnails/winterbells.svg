@@ -1,0 +1,239 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient backgrounds -->
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5f8f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c4d7f2;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="bellGlow">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- Glow filters -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="strongGlow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Animations -->
+    <style>
+      @keyframes rabbitBounce {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(-5deg); }
+      }
+      
+      @keyframes bellSwing1 {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-8deg); }
+        75% { transform: rotate(8deg); }
+      }
+      
+      @keyframes bellSwing2 {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(6deg); }
+        75% { transform: rotate(-6deg); }
+      }
+      
+      @keyframes bellSwing3 {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-5deg); }
+        75% { transform: rotate(5deg); }
+      }
+      
+      @keyframes snowFall1 {
+        0% { transform: translateY(0) translateX(0); opacity: 0.8; }
+        100% { transform: translateY(400px) translateX(20px); opacity: 0.3; }
+      }
+      
+      @keyframes snowFall2 {
+        0% { transform: translateY(0) translateX(0); opacity: 0.7; }
+        100% { transform: translateY(400px) translateX(-15px); opacity: 0.2; }
+      }
+      
+      @keyframes snowFall3 {
+        0% { transform: translateY(0) translateX(0); opacity: 0.9; }
+        100% { transform: translateY(400px) translateX(10px); opacity: 0.4; }
+      }
+      
+      @keyframes bellGlow {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 0.9; }
+      }
+      
+      .rabbit {
+        animation: rabbitBounce 2s ease-in-out infinite;
+        transform-origin: center;
+      }
+      
+      .bell1 {
+        animation: bellSwing1 1.5s ease-in-out infinite;
+        transform-origin: 50% 0%;
+      }
+      
+      .bell2 {
+        animation: bellSwing2 1.8s ease-in-out infinite 0.3s;
+        transform-origin: 50% 0%;
+      }
+      
+      .bell3 {
+        animation: bellSwing3 1.6s ease-in-out infinite 0.6s;
+        transform-origin: 50% 0%;
+      }
+      
+      .snowflake1 { animation: snowFall1 8s linear infinite; }
+      .snowflake2 { animation: snowFall2 10s linear infinite; }
+      .snowflake3 { animation: snowFall3 9s linear infinite; }
+      
+      .bellGlowAnim {
+        animation: bellGlow 2s ease-in-out infinite;
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#skyGradient)"/>
+  
+  <!-- Falling snowflakes (background) -->
+  <g class="snowflake1">
+    <circle cx="50" cy="-20" r="3" fill="#fff" opacity="0.8"/>
+  </g>
+  <g class="snowflake2">
+    <circle cx="150" cy="-50" r="4" fill="#fff" opacity="0.7"/>
+  </g>
+  <g class="snowflake3">
+    <circle cx="250" cy="-30" r="2" fill="#fff" opacity="0.9"/>
+  </g>
+  <g class="snowflake1" style="animation-delay: 2s;">
+    <circle cx="350" cy="-40" r="3" fill="#fff" opacity="0.8"/>
+  </g>
+  <g class="snowflake2" style="animation-delay: 4s;">
+    <circle cx="100" cy="-60" r="2" fill="#fff" opacity="0.6"/>
+  </g>
+  
+  <!-- Static snowflakes (scattered) -->
+  <circle cx="80" cy="100" r="2" fill="#fff" opacity="0.5"/>
+  <circle cx="320" cy="150" r="3" fill="#fff" opacity="0.6"/>
+  <circle cx="40" cy="250" r="2" fill="#fff" opacity="0.4"/>
+  <circle cx="360" cy="280" r="2" fill="#fff" opacity="0.5"/>
+  <circle cx="180" cy="350" r="3" fill="#fff" opacity="0.6"/>
+  <circle cx="280" cy="80" r="2" fill="#fff" opacity="0.4"/>
+  
+  <!-- Bell strings -->
+  <line x1="200" y1="80" x2="200" y2="120" stroke="#8b7355" stroke-width="2"/>
+  <line x1="120" y1="180" x2="120" y2="220" stroke="#8b7355" stroke-width="2"/>
+  <line x1="300" y1="240" x2="300" y2="280" stroke="#8b7355" stroke-width="2"/>
+  
+  <!-- Bell glows -->
+  <g class="bellGlowAnim">
+    <circle cx="200" cy="135" r="35" fill="url(#bellGlow)"/>
+  </g>
+  <g class="bellGlowAnim" style="animation-delay: 0.3s;">
+    <circle cx="120" cy="235" r="35" fill="url(#bellGlow)"/>
+  </g>
+  <g class="bellGlowAnim" style="animation-delay: 0.6s;">
+    <circle cx="300" cy="295" r="35" fill="url(#bellGlow)"/>
+  </g>
+  
+  <!-- Bell 1 (top) -->
+  <g class="bell1" transform="translate(200, 120)">
+    <circle cx="0" cy="15" r="20" fill="#fbbf24" filter="url(#glow)" stroke="#f59e0b" stroke-width="2"/>
+    <circle cx="-6" cy="9" r="7" fill="#fef3c7" opacity="0.7"/>
+    <circle cx="0" cy="23" r="4" fill="#8b4513"/>
+    <line x1="-8" y1="25" x2="8" y2="25" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Bell 2 (middle left) -->
+  <g class="bell2" transform="translate(120, 220)">
+    <circle cx="0" cy="15" r="20" fill="#fbbf24" filter="url(#glow)" stroke="#f59e0b" stroke-width="2"/>
+    <circle cx="-6" cy="9" r="7" fill="#fef3c7" opacity="0.7"/>
+    <circle cx="0" cy="23" r="4" fill="#8b4513"/>
+    <line x1="-8" y1="25" x2="8" y2="25" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Bell 3 (middle right) -->
+  <g class="bell3" transform="translate(300, 280)">
+    <circle cx="0" cy="15" r="20" fill="#fbbf24" filter="url(#glow)" stroke="#f59e0b" stroke-width="2"/>
+    <circle cx="-6" cy="9" r="7" fill="#fef3c7" opacity="0.7"/>
+    <circle cx="0" cy="23" r="4" fill="#8b4513"/>
+    <line x1="-8" y1="25" x2="8" y2="25" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Rabbit (center, bouncing) -->
+  <g class="rabbit" transform="translate(200, 220)">
+    <!-- Shadow -->
+    <ellipse cx="0" cy="25" rx="25" ry="6" fill="#000" opacity="0.2"/>
+    
+    <!-- Body -->
+    <ellipse cx="0" cy="0" rx="25" ry="20" fill="#ffffff" filter="url(#strongGlow)"/>
+    
+    <!-- Left ear -->
+    <ellipse cx="-10" cy="-18" rx="6" ry="15" fill="#ffffff" stroke="#ffc0cb" stroke-width="2" transform="rotate(-15 -10 -18)"/>
+    <ellipse cx="-10" cy="-15" rx="3" ry="8" fill="#ffc0cb" transform="rotate(-15 -10 -15)"/>
+    
+    <!-- Right ear -->
+    <ellipse cx="10" cy="-18" rx="6" ry="15" fill="#ffffff" stroke="#ffc0cb" stroke-width="2" transform="rotate(15 10 -18)"/>
+    <ellipse cx="10" cy="-15" rx="3" ry="8" fill="#ffc0cb" transform="rotate(15 10 -15)"/>
+    
+    <!-- Body shine -->
+    <ellipse cx="-8" cy="-5" rx="10" ry="12" fill="#f9fafb" opacity="0.6"/>
+    
+    <!-- Left eye -->
+    <circle cx="-8" cy="-2" r="3" fill="#000"/>
+    <circle cx="-7" cy="-3" r="1.5" fill="#fff"/>
+    
+    <!-- Right eye -->
+    <circle cx="8" cy="-2" r="3" fill="#000"/>
+    <circle cx="9" cy="-3" r="1.5" fill="#fff"/>
+    
+    <!-- Nose -->
+    <circle cx="0" cy="3" r="2.5" fill="#ffc0cb"/>
+    
+    <!-- Mouth (cute smile) -->
+    <path d="M -5 6 Q 0 8 5 6" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Whiskers -->
+    <line x1="-12" y1="2" x2="-20" y2="0" stroke="#999" stroke-width="1"/>
+    <line x1="-12" y1="4" x2="-20" y2="5" stroke="#999" stroke-width="1"/>
+    <line x1="12" y1="2" x2="20" y2="0" stroke="#999" stroke-width="1"/>
+    <line x1="12" y1="4" x2="20" y2="5" stroke="#999" stroke-width="1"/>
+    
+    <!-- Tail -->
+    <circle cx="22" cy="5" r="6" fill="#ffffff"/>
+  </g>
+  
+  <!-- Score stars/sparkles -->
+  <g opacity="0.7">
+    <motion.g style="animation: bellGlow 1.5s ease-in-out infinite;">
+      <path d="M 100 320 L 105 325 L 100 330 L 95 325 Z" fill="#fbbf24"/>
+      <circle cx="100" cy="325" r="3" fill="#fef3c7" opacity="0.6"/>
+    </motion.g>
+    
+    <motion.g style="animation: bellGlow 1.5s ease-in-out infinite 0.5s;">
+      <path d="M 320 180 L 325 185 L 320 190 L 315 185 Z" fill="#60a5fa"/>
+      <circle cx="320" cy="185" r="3" fill="#dbeafe" opacity="0.6"/>
+    </motion.g>
+  </g>
+  
+  <!-- Title text -->
+  <text x="200" y="380" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#60a5fa" text-anchor="middle" filter="url(#strongGlow)">
+    WINTER BELLS
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="200" y="395" font-family="Arial, sans-serif" font-size="12" fill="#93c5fd" text-anchor="middle" opacity="0.8">
+    Click to bounce!
+  </text>
+</svg>
