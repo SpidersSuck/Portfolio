@@ -21,7 +21,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Classic strategy game',
       category: 'strategy',
       difficulty: 'easy' as const,
-      image: '/game-thumbnails/tictactoe.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/tictactoe.svg'
     },
     {
       id: 'snake',
@@ -29,7 +29,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Eat and grow',
       category: 'arcade',
       difficulty: 'medium' as const,
-      image: '/game-thumbnails/snake.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/snake.svg'
     },
     {
       id: 'memory',
@@ -37,7 +37,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Test your memory',
       category: 'puzzle',
       difficulty: 'easy' as const,
-      image: '/game-thumbnails/memory.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/memory.svg'
     },
     {
       id: 'breakout',
@@ -45,7 +45,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Break the bricks',
       category: 'arcade',
       difficulty: 'medium' as const,
-      image: '/game-thumbnails/breakout.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/breakout.svg'
     },
     {
       id: 'simon',
@@ -53,7 +53,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Repeat the pattern',
       category: 'memory',
       difficulty: 'medium' as const,
-      image: '/game-thumbnails/simon.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/simon.svg'
     },
     {
       id: 'minesweeper',
@@ -61,7 +61,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Clear the mines',
       category: 'puzzle',
       difficulty: 'hard' as const,
-      image: '/game-thumbnails/minesweeper.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/minesweeper.svg'
     },
     {
       id: 'tetris',
@@ -69,7 +69,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Stack falling blocks',
       category: 'puzzle',
       difficulty: 'easy' as const,
-      image: '/game-thumbnails/tetris.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/tetris.svg'
     },
     {
       id: 'asteroids',
@@ -77,7 +77,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Destroy asteroids in space',
       category: 'arcade',
       difficulty: 'medium' as const,
-      image: '/game-thumbnails/asteroids.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/asteroids.svg'
     },
     {
       id: 'pong',
@@ -85,7 +85,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'Classic paddle game',
       category: 'arcade',
       difficulty: 'easy' as const,
-      image: '/game-thumbnails/pong.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/pong.svg'
     },
     {
       id: 'pacman',
@@ -93,7 +93,7 @@ export function HeroHomePage({ onSelectGame, onNavigate }: HeroHomePageProps) {
       description: 'The legendary arcade maze game',
       category: 'arcade',
       difficulty: 'medium' as const,
-      image: '/game-thumbnails/pacman.svg'
+      image: import.meta.env.BASE_URL + 'game-thumbnails/pacman.svg'
     }
   ];
 

@@ -35,7 +35,7 @@ const allGames: Game[] = [
     rating: 4.2,
     playtime: '5 min',
     features: ['Strategy', '2 Players', 'Quick Match', 'Logic'],
-    image: '/game-thumbnails/tictactoe.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/tictactoe.svg'
   },
   { 
     id: 'snake', 
@@ -48,7 +48,7 @@ const allGames: Game[] = [
     rating: 4.7,
     playtime: '10 min',
     features: ['Arcade', 'High Score', 'Endless', 'Retro', 'Action'],
-    image: '/game-thumbnails/snake.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/snake.svg'
   },
   { 
     id: 'memory', 
@@ -61,7 +61,7 @@ const allGames: Game[] = [
     rating: 4.5,
     playtime: '8 min',
     features: ['Puzzle', 'Brain Training', 'Memory', 'Timed', 'Educational'],
-    image: '/game-thumbnails/memory.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/memory.svg'
   },
   { 
     id: 'breakout', 
@@ -74,7 +74,7 @@ const allGames: Game[] = [
     rating: 4.6,
     playtime: '15 min',
     features: ['Arcade', 'Power-ups', 'Levels', 'Classic', 'Action'],
-    image: '/game-thumbnails/breakout.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/breakout.svg'
   },
   { 
     id: 'tetris', 
@@ -87,7 +87,7 @@ const allGames: Game[] = [
     rating: 4.9,
     playtime: '12 min',
     features: ['Puzzle', 'Classic', 'Stacking', 'Endless', 'Retro'],
-    image: '/game-thumbnails/tetris.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/tetris.svg'
   },
   // Flappy Bird removed
   { 
@@ -101,7 +101,7 @@ const allGames: Game[] = [
     rating: 4.7,
     playtime: '10 min',
     features: ['Casual', 'Relaxing', 'Combo System', 'Musical', 'Peaceful'],
-    image: '/game-thumbnails/winterbells.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/winterbells.svg'
   },
   // Space Invaders removed
   { 
@@ -115,7 +115,7 @@ const allGames: Game[] = [
     rating: 4.8,
     playtime: '12 min',
     features: ['Shooter', 'Action', 'Space', 'Retro', 'Physics'],
-    image: '/game-thumbnails/asteroids.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/asteroids.svg'
   },
   { 
     id: 'pong', 
@@ -128,7 +128,7 @@ const allGames: Game[] = [
     rating: 4.1,
     playtime: '10 min',
     features: ['Sports', '2 Players', 'Retro', 'Fast-Paced', 'Classic'],
-    image: '/game-thumbnails/pong.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/pong.svg'
   },
   { 
     id: 'pacman', 
@@ -141,7 +141,7 @@ const allGames: Game[] = [
     rating: 5.0,
     playtime: '15 min',
     features: ['Arcade', 'Classic', 'Retro', 'Legendary', 'Maze'],
-    image: '/game-thumbnails/pacman.svg'
+    image: import.meta.env.BASE_URL + 'game-thumbnails/pacman.svg'
   },
 ];
 

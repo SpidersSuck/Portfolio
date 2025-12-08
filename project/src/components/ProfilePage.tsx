@@ -12,12 +12,12 @@ interface ProfilePageProps {
 export function ProfilePage({ onBack, onSelectGame }: ProfilePageProps) {
     const [activeAchievement, setActiveAchievement] = useState<number | null>(null);
   const recentGames = [
-    { id: 'snake', name: 'Snake', lastPlayed: '2 hours ago', image: '/game-thumbnails/snake.svg' },
-    { id: 'pacman', name: 'Pac-Man', lastPlayed: '3 hours ago', image: '/game-thumbnails/pacman.svg' },
-    { id: 'tetris', name: 'Tetris', lastPlayed: '5 hours ago', image: '/game-thumbnails/tetris.svg' },
-    { id: 'memory', name: 'Memory Match', lastPlayed: '1 day ago', image: '/game-thumbnails/memory.svg' },
-    { id: '2048', name: '2048', lastPlayed: '2 days ago', image: '/game-thumbnails/2048.svg' },
-    { id: 'breakout', name: 'Breakout', lastPlayed: '3 days ago', image: '/game-thumbnails/breakout.svg' },
+    { id: 'snake', name: 'Snake', lastPlayed: '2 hours ago', image: import.meta.env.BASE_URL + 'game-thumbnails/snake.svg' },
+    { id: 'pacman', name: 'Pac-Man', lastPlayed: '3 hours ago', image: import.meta.env.BASE_URL + 'game-thumbnails/pacman.svg' },
+    { id: 'tetris', name: 'Tetris', lastPlayed: '5 hours ago', image: import.meta.env.BASE_URL + 'game-thumbnails/tetris.svg' },
+    { id: 'memory', name: 'Memory Match', lastPlayed: '1 day ago', image: import.meta.env.BASE_URL + 'game-thumbnails/memory.svg' },
+    { id: '2048', name: '2048', lastPlayed: '2 days ago', image: import.meta.env.BASE_URL + 'game-thumbnails/2048.svg' },
+    { id: 'breakout', name: 'Breakout', lastPlayed: '3 days ago', image: import.meta.env.BASE_URL + 'game-thumbnails/breakout.svg' },
   ];
 
   const achievements = [
