@@ -2,7 +2,7 @@
 
 Full-stack developer specializing in web applications, AI development workflows, and modern JavaScript frameworks. Computer Science student at Washington State University (graduating 2026).
 
-🎓 **[NVIDIA Certified - Deep Learning Fundamentals](My%20Learning%20_%20NVIDIA.pdf)**
+🎓 **NVIDIA Certified - Deep Learning Fundamentals**
 
 ## 🌐 Live Projects
 
@@ -99,6 +99,5 @@ Full-stack website for non-profit organization with focus on community engagemen
 
 ---
 
-📄 **[Full Resume Available](resume.docx)**
-
 *Portfolio updated December 2025*
+ 
