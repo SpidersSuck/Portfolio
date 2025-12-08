@@ -13,7 +13,7 @@ export function Pacman({ onBack }: PacmanProps) {
   const [isMuted, setIsMuted] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const volumeStateRef = useRef({ volume: 20, isMuted: false });
-  const gameUrl = `/pacman-game/index.html`;
+  const gameUrl = `${import.meta.env.BASE_URL}pacman-game/index.html`;
 
   // Update volume state ref whenever volume or mute changes
   useEffect(() => {
@@ -225,3 +225,4 @@ export function Pacman({ onBack }: PacmanProps) {
     </div>
   );
 }
+
