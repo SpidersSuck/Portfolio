@@ -1,0 +1,51 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#0a1929"/>
+  
+  <!-- Cards grid -->
+  <defs>
+    <!-- Question mark pattern for cards -->
+    <symbol id="cardBack">
+      <rect width="70" height="70" rx="8" fill="#f59e0b"/>
+      <text x="35" y="50" font-family="Arial" font-size="40" fill="#0a1929" text-anchor="middle" font-weight="bold">?</text>
+    </symbol>
+    
+    <!-- Revealed cards with symbols -->
+    <symbol id="star">
+      <rect width="70" height="70" rx="8" fill="#e6eef6"/>
+      <text x="35" y="50" font-family="Arial" font-size="35" fill="#f59e0b" text-anchor="middle">★</text>
+    </symbol>
+    
+    <symbol id="heart">
+      <rect width="70" height="70" rx="8" fill="#e6eef6"/>
+      <text x="35" y="50" font-family="Arial" font-size="35" fill="#ec4899" text-anchor="middle">♥</text>
+    </symbol>
+    
+    <symbol id="diamond">
+      <rect width="70" height="70" rx="8" fill="#e6eef6"/>
+      <text x="35" y="50" font-family="Arial" font-size="35" fill="#06b6d4" text-anchor="middle">♦</text>
+    </symbol>
+  </defs>
+  
+  <!-- Card layout (4x3 grid) -->
+  <!-- Row 1 -->
+  <use href="#cardBack" x="30" y="40"/>
+  <use href="#star" x="110" y="40"/>
+  <use href="#cardBack" x="190" y="40"/>
+  <use href="#heart" x="270" y="40"/>
+  
+  <!-- Row 2 -->
+  <use href="#diamond" x="30" y="120"/>
+  <use href="#cardBack" x="110" y="120"/>
+  <use href="#cardBack" x="190" y="120"/>
+  <use href="#star" x="270" y="120"/>
+  
+  <!-- Row 3 -->
+  <use href="#cardBack" x="30" y="200"/>
+  <use href="#heart" x="110" y="200"/>
+  <use href="#diamond" x="190" y="200"/>
+  <use href="#cardBack" x="270" y="200"/>
+  
+  <!-- Title -->
+  <text x="200" y="25" font-family="Arial, sans-serif" font-size="18" fill="#e6eef6" text-anchor="middle" font-weight="bold">MEMORY MATCH</text>
+</svg>
