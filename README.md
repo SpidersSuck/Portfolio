@@ -1,2 +1,104 @@
-# Portfolio
-a porfolio of projects  for personal reasons , college, all the way to client requests
+# Julian Hutchins | Developer Portfolio
+
+Full-stack developer specializing in web applications, AI development workflows, and modern JavaScript frameworks. Computer Science student at Washington State University (graduating 2026).
+
+🎓 **[NVIDIA Certified - Deep Learning Fundamentals](My%20Learning%20_%20NVIDIA.pdf)**
+
+## 🌐 Live Projects
+
+**[MCP Website Demo](https://spiderssuck.github.io/Portfolio/)** - Web game portal with AI-assisted development  
+**[Campus Safety Platform](#)** - Django-based safety resource hub *(Demo available upon request)*  
+**[A Woman's Worth Community](#)** - Non-profit community website *(In development)*
+
+## 💻 Technical Skills
+
+### Languages & Core Technologies
+- **Primary:** Python, JavaScript/TypeScript, C/C++
+- **Web:** HTML5, CSS3, SQL
+- **Functional:** Haskell
+- **Scripting:** PowerShell, Bash (Linux/Ubuntu)
+
+### Frameworks & Libraries
+- **Frontend:** React, Vite, Tailwind CSS, Motion (Framer Motion)
+- **Backend:** Node.js, Django
+- **Database:** MySQL
+- **CMS:** WordPress
+
+### Development Tools & Platforms
+- **Version Control:** Git, GitHub
+- **Design:** Figma, Adobe Photoshop, InDesign, Dreamweaver
+- **IDE/Editors:** Visual Studio Code
+- **AI Development:** GitHub Copilot, Claude Sonnet, ChatGPT, DeepSeek, Gemini
+- **DevOps:** Docker basics, CI/CD workflows
+
+### Specialized Skills
+- Model Context Protocol (MCP) integration
+- RESTful API design and implementation
+- Responsive web design
+- Data mining and analysis
+- System administration (PowerShell/Linux)
+
+## 🚀 Featured Projects
+
+### MCP Website Demo - *Live on GitHub Pages*
+Modern web game portal demonstrating Model Context Protocol integration for AI-assisted development.
+
+**Technical Stack:**
+- React 18 with TypeScript
+- Vite build tooling
+- Motion (Framer Motion) for animations
+- Tailwind CSS for styling
+- LocalStorage for state persistence
+
+**Key Features:**
+- 12+ interactive browser-based games
+- Component-based architecture
+- Automated AI coordination workflow
+- Real-time error recovery
+- Zero context loss in development
+
+**[Live Demo](https://spiderssuck.github.io/Portfolio/)** | **[Source Code](mcp%20website%20demo/)**
+
+---
+
+### Campus Safety Platform
+Django-based web application providing centralized safety resources and real-time incident tracking.
+
+**Technical Stack:**
+- Django (Python)
+- MySQL database
+- JavaScript for interactive features
+- RESTful API architecture
+
+**Features:**
+- User authentication and authorization
+- Real-time notification system
+- Interactive incident mapping
+- Resource directory
+
+---
+
+### A Woman's Worth Community Website
+Full-stack website for non-profit organization with focus on community engagement.
+
+**Technical Stack:**
+- Figma for UI/UX design
+- Modern frontend frameworks
+- Responsive design principles
+
+**Development Approach:**
+- Client collaboration and requirement gathering
+- Iterative design and development
+- Accessibility-first implementation
+
+## 📚 Certifications & Education
+
+- 🎓 **BS in Computer Science** - Washington State University (Expected 2026)
+- 🎓 **Certificate in Web Development** - Portland Community College
+- 🏆 **Dean's List** - Portland Community College
+
+---
+
+📄 **[Full Resume Available](resume.docx)**
+
+*Portfolio updated December 2025*
