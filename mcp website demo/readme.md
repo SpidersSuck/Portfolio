@@ -1,4 +1,4 @@
-# Mini Web Game Portal with MCP Integration - Project Phase Implementation
+# Mini Web Game Portal with MCP Integration - Project Phase Implementation ([live demo](https://spiderssuck.github.io/Portfolio/mcp%20website%20demo/project/))
 
 ## Course: CptS 483 Special Topic - Coding with Agentic AI
 ## Track: Web Development
