@@ -1,0 +1,106 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#0a1929"/>
+  
+  <!-- Grid -->
+  <defs>
+    <style>
+      .cell { fill: #1e293b; stroke: #475569; stroke-width: 2; }
+      .cell-revealed { fill: #334155; }
+      .cell-flagged { fill: #1e293b; }
+      .mine { fill: #ef4444; }
+      .number { font-family: monospace; font-size: 18px; font-weight: bold; text-anchor: middle; }
+    </style>
+  </defs>
+  
+  <!-- Minesweeper grid (8x8) -->
+  <g transform="translate(80, 40)">
+    <!-- Row 1 -->
+    <rect class="cell-revealed" x="0" y="0" width="30" height="30"/>
+    <text class="number" fill="#06b6d4" x="15" y="20">1</text>
+    
+    <rect class="cell-revealed" x="30" y="0" width="30" height="30"/>
+    
+    <rect class="cell-revealed" x="60" y="0" width="30" height="30"/>
+    <text class="number" fill="#06b6d4" x="75" y="20">1</text>
+    
+    <rect class="cell-revealed" x="90" y="0" width="30" height="30"/>
+    <text class="number" fill="#10b981" x="105" y="20">2</text>
+    
+    <rect class="cell" x="120" y="0" width="30" height="30"/>
+    
+    <rect class="cell" x="150" y="0" width="30" height="30"/>
+    
+    <rect class="cell-flagged" x="180" y="0" width="30" height="30"/>
+    <text font-size="20" fill="#ef4444" x="195" y="22" text-anchor="middle">🚩</text>
+    
+    <rect class="cell" x="210" y="0" width="30" height="30"/>
+    
+    <!-- Row 2 -->
+    <rect class="cell-revealed" x="0" y="30" width="30" height="30"/>
+    <text class="number" fill="#06b6d4" x="15" y="50">1</text>
+    
+    <rect class="cell-revealed" x="30" y="30" width="30" height="30"/>
+    <text class="number" fill="#06b6d4" x="45" y="50">1</text>
+    
+    <rect class="cell-revealed" x="60" y="30" width="30" height="30"/>
+    <text class="number" fill="#10b981" x="75" y="50">2</text>
+    
+    <rect class="cell" x="90" y="30" width="30" height="30"/>
+    
+    <rect class="cell" x="120" y="30" width="30" height="30"/>
+    
+    <rect class="cell" x="150" y="30" width="30" height="30"/>
+    
+    <rect class="cell" x="180" y="30" width="30" height="30"/>
+    
+    <rect class="cell" x="210" y="30" width="30" height="30"/>
+    
+    <!-- Row 3 -->
+    <rect class="cell-revealed" x="0" y="60" width="30" height="30"/>
+    
+    <rect class="cell-revealed" x="30" y="60" width="30" height="30"/>
+    
+    <rect class="cell-revealed" x="60" y="60" width="30" height="30"/>
+    <text class="number" fill="#06b6d4" x="75" y="80">1</text>
+    
+    <rect class="cell" x="90" y="60" width="30" height="30"/>
+    
+    <rect class="cell" x="120" y="60" width="30" height="30"/>
+    
+    <rect class="cell" x="150" y="60" width="30" height="30"/>
+    
+    <rect class="cell-flagged" x="180" y="60" width="30" height="30"/>
+    <text font-size="20" fill="#ef4444" x="195" y="82" text-anchor="middle">🚩</text>
+    
+    <rect class="cell" x="210" y="60" width="30" height="30"/>
+    
+    <!-- Additional rows (simplified) -->
+    <rect class="cell" x="0" y="90" width="30" height="30"/>
+    <rect class="cell" x="30" y="90" width="30" height="30"/>
+    <rect class="cell" x="60" y="90" width="30" height="30"/>
+    <rect class="cell" x="90" y="90" width="30" height="30"/>
+    <rect class="cell" x="120" y="90" width="30" height="30"/>
+    <rect class="cell" x="150" y="90" width="30" height="30"/>
+    <rect class="cell" x="180" y="90" width="30" height="30"/>
+    <rect class="cell" x="210" y="90" width="30" height="30"/>
+    
+    <rect class="cell" x="0" y="120" width="30" height="30"/>
+    <rect class="cell" x="30" y="120" width="30" height="30"/>
+    <rect class="cell" x="60" y="120" width="30" height="30"/>
+    <rect class="cell" x="90" y="120" width="30" height="30"/>
+    <rect class="cell" x="120" y="120" width="30" height="30"/>
+    <rect class="cell" x="150" y="120" width="30" height="30"/>
+    <rect class="cell" x="180" y="120" width="30" height="30"/>
+    <rect class="cell" x="210" y="120" width="30" height="30"/>
+  </g>
+  
+  <!-- Stats -->
+  <g>
+    <text x="20" y="25" font-family="monospace" font-size="14" fill="#ef4444" font-weight="bold">💣 10</text>
+    <text x="380" y="25" font-family="monospace" font-size="14" fill="#06b6d4" text-anchor="end" font-weight="bold">⏱️ 45</text>
+  </g>
+  
+  <!-- Title -->
+  <text x="200" y="235" font-family="Arial, sans-serif" font-size="18" fill="#e6eef6" text-anchor="middle" font-weight="bold">MINESWEEPER</text>
+</svg>
