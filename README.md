@@ -96,12 +96,15 @@ Full-stack website for non-profit organization with focus on community engagemen
 - Tailwind CSS with shadcn/ui components
 - Responsive design principles
 
+
 **Key Features:**
 - Content management system for admin updates
 - User authentication and profiles
 - Event management and gallery
 - Donation integration
 - Community stories section
+
+**[Live Demo](https://spiderssuck.github.io/aww-demo/)** | **[Source Code](aww-demo/)**
 
 
 ---
