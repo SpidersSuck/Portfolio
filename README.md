@@ -1,7 +1,7 @@
 # Julian Hutchins | Developer Portfolio
 
 Full-stack developer specializing in web applications, AI development workflows, and modern JavaScript frameworks. Computer Science student at Washington State University (graduating 2026).
-
+## 📚 Certifications & Education
 🎓 **NVIDIA Certified - Deep Learning Fundamentals**  
 🎓 **Bachelor of Science in Computer Science** - Washington State University (Expected May 2026)
 
@@ -98,7 +98,7 @@ Full-stack website for non-profit organization with focus on community engagemen
 
 **[Live Demo](https://spiderssuck.github.io/aww-demo/)** | **[Source Code](aww-demo/)**
 
-## 📚 Certifications & Education
+
 
 
  
