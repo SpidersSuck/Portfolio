@@ -8,8 +8,8 @@ Full-stack developer specializing in web applications, AI development workflows,
 ## 🌐 Live Projects
 
 **[MCP Website Demo](https://spiderssuck.github.io/Portfolio/)** - Multi-agent AI coordination platform with Model Context Protocol integration, featuring automated development workflow and real-time context synchronization  
-**[Campus Safety Platform](#)** - Django-based safety resource hub *(Demo available upon request)*  
-**[A Woman's Worth Community](#)** - Non-profit community website *(In development)*
+**[A Woman's Worth Community](https://spiderssuck.github.io/aww-demo/)** - Non-profit community website with modern design and accessibility features  
+**[Campus Safety Platform](#)** - Django-based safety resource hub *(Demo available upon request)*
 
 ## 💻 Technical Skills
 
