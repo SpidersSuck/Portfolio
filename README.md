@@ -8,18 +8,10 @@ Full-stack developer specializing in web applications, AI development workflows,
 ## 🌐 Live Projects
 
 
-**[MCP Website Demo](https://spiderssuck.github.io/Portfolio/)**  
-  [Live Demo](https://spiderssuck.github.io/Portfolio/) | [Source Code](mcp%20website%20demo/)  
-Multi-agent AI coordination platform with Model Context Protocol integration, featuring automated development workflow and real-time context synchronization
 
-**[A Woman's Worth Community](https://spiderssuck.github.io/aww-demo/)**  
-  [Live Demo](https://spiderssuck.github.io/aww-demo/) | [Source Code](aww-demo/)  
-Non-profit community website with modern design and accessibility features
-
-**[WebGL Train Scene Demo](https://spiderssuck.github.io/WEB-GL-Moving-Train-Demo/index.html)**  
-  [Live Demo](https://spiderssuck.github.io/WEB-GL-Moving-Train-Demo/index.html) | [Source Code](https://github.com/SpidersSuck/WEB-GL-Moving-Train-Demo)  
-Interactive 3D train simulation built with pure WebGL and JavaScript. Real-time 3D rendering, procedural terrain, dynamic lighting, and advanced particle effects—all from scratch, no external 3D libraries.
-
+**[MCP Website Demo](https://spiderssuck.github.io/Portfolio/)** - Multi-agent AI coordination platform with Model Context Protocol integration, featuring automated development workflow and real-time context synchronization
+**[A Woman's Worth Community](https://spiderssuck.github.io/aww-demo/)** - Non-profit community website with modern design and accessibility features
+**[WebGL Train Scene Demo](https://spiderssuck.github.io/WEB-GL-Moving-Train-Demo/index.html)** - Interactive 3D train simulation built with pure WebGL and JavaScript
 **[Campus Safety Platform](#)** - Django-based safety resource hub *(Demo available upon request)*
 
 ## 💻 Technical Skills
@@ -68,6 +60,7 @@ Modern web game portal demonstrating Model Context Protocol integration for AI-a
 - Automated AI coordination workflow
 - Real-time error recovery
 - Zero context loss in development
+
 
 **[Live Demo](https://spiderssuck.github.io/Portfolio/)** | **[Source Code](mcp%20website%20demo/)**
 
@@ -130,7 +123,10 @@ Interactive 3D train simulation built with pure WebGL and JavaScript. Real-time 
 - Environmental props: street lamps, trees, distance fog
 - Real-time controls: camera switching, WASD free-flight, speed, and pause
 
+
 **[Live Demo](https://spiderssuck.github.io/WEB-GL-Moving-Train-Demo/index.html)** | **[Source Code](https://github.com/SpidersSuck/WEB-GL-Moving-Train-Demo)**
+
+**[Live Demo](https://spiderssuck.github.io/aww-demo/)** | **[Source Code](aww-demo/)**
 
 
 
