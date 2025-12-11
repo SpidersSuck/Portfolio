@@ -96,7 +96,30 @@ Full-stack website for non-profit organization with focus on community engagemen
 - Donation integration
 - Community stories section
 
-**[Live Demo](https://spiderssuck.github.io/aww-demo/)** | **[Source Code](aww-demo/)**
+
+---
+
+### WebGL Train Scene Demo - *Live on GitHub Pages*
+Interactive 3D train simulation built with pure WebGL and JavaScript. Real-time 3D rendering, procedural terrain, dynamic lighting, and advanced particle effects—all from scratch, no external 3D libraries.
+
+**Technical Stack:**
+- WebGL 1.0 (manual rendering pipeline)
+- JavaScript ES6+
+- GLSL shaders
+- glMatrix 3.4.3
+
+**Features:**
+- Custom rendering pipeline with vertex and fragment shaders
+- Multiple camera modes: follow, side, top-down, orbital, and free-flight
+- Dynamic lighting system with 10 concurrent light sources and spotlights
+- Procedural skybox, animated sun, and cloud layers
+- Advanced particle system for animated smoke
+- Infinite terrain generation with procedural hills and valleys
+- Animated 3D train model with independently rotating wheels
+- Environmental props: street lamps, trees, distance fog
+- Real-time controls: camera switching, WASD free-flight, speed, and pause
+
+**[Live Demo](https://spiderssuck.github.io/WEB-GL-Moving-Train-Demo/index.html)** | **[Source Code](https://github.com/SpidersSuck/WEB-GL-Moving-Train-Demo)**
 
 
 
