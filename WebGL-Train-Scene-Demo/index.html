@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Project - 3D Train Scene</title>
+                 <!-- ============================================================================
+                                CPTS 442 FINAL PROJECT - 3D TRAIN SCENE
+         ============================================================================ --
+         ============================================================================
+         External resources/libraries used in this project
+         free online texture for terrain and train metal: https://polyhaven.com/textures
+         libraries: standard webgl library https://cdn.jsdelivr.net/npm/gl-matrix@3.4.3/gl-matrix-min.js"
+         ============================================================================ -->
+    <!-- ============================================================================
+         CSS STYLING
+         Basic page styling to remove margins and make canvas fill viewport
+         ============================================================================ -->
+    <style>
+        /* Reset default margins and padding */
+        * { margin: 0; padding: 0; }
+        body { 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            background: #1a0a20;
+            font-family: monospace;
+        }
+        canvas { 
+            display: block; 
+            width: 100%; 
+            height: 100%; 
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            color: #ffd966;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ffd966;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            transition: opacity 0.3s;
+        }
+        #info.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #toggleInfo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: #ffd966;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #ffd966;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+        #toggleInfo:hover {
+            background: rgba(255,217,102,0.2);
+        }
+        #info h3 { margin: 0 0 10px 0; color: #ffd966; }
+        #info p { margin: 5px 0; color: #fff; }
+        .key { 
+            background: #334; 
+            padding: 2px 6px; 
+            border-radius: 3px; 
+            color: #8cf; 
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================================================
+         CANVAS ELEMENT
+         Main WebGL rendering surface - sized to fill entire viewport
+         ============================================================================ -->
+    <canvas id="c"></canvas>
+    
+    <!-- Control panel overlay - shows keyboard controls to user -->
+    <div id="info">
+        <h3>🚂 WebGL Train Sim!</h3>
+        <p>Camera: <span class="key">1</span> Follow <span class="key">2</span> Side <span class="key">3</span> Top <span class="key">4</span> Orbit <span class="key">5</span> Free</p>
+        <p>Speed: <span class="key">↑</span> Faster <span class="key">↓</span> Slower</p>
+        <p>Free Cam: <span class="key">WASD</span> Move <span class="key">Q/E</span> Up/Down <span class="key">Drag</span> Look</p>
+        <p>Pause: <span class="key">Space</span></p>
+    </div>
+
+<!-- glMatrix - standard WebGL math library -->
+<script src="https://cdn.jsdelivr.net/npm/gl-matrix@3.4.3/gl-matrix-min.js"></script>
+<script>
+'use strict';
+
+// ============================================================================
+// MATRIX MATH SETUP
+// MODIFIED FROM: Week 7 Library (using glMatrix instead of custom matrix code)
+// ============================================================================
+const {mat4} = glMatrix;
+
+// ============================================================================
+// WEBGL INITIALIZATION
+// EXAMPLES FROM: Week 6 Basic Setup
+// ============================================================================
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl', {antialias: true, alpha: false});
+if (!gl) { alert('WebGL not supported!'); throw new Error('WebGL not supported'); }
+
+// Enable extension for large models with more than 65535 vertices
+// Allows use of Uint32 indices instead of just Uint16
+const ext = gl.getExtension('OES_element_index_uint');
+if (!ext) { console.warn('OES_element_index_uint not supported - large models may not work'); }
+
+// Resize canvas to match window size
+// Uses device pixel ratio for sharp rendering on high-DPI displays
+function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ============================================================================
+// SKY SHADERS
+// Creates a gradient sunset background with clouds and a sun
+// ============================================================================
+
+// Positions the sky background behind everything
+const skyVertSrc = `
+attribute vec2 a_position;
+varying vec2 v_position;
+void main() {
+    v_position = a_position;
+    gl_Position = vec4(a_position, 0.9999, 1.0);
+}`;
+
+// Creates gradient sunset colors and adds sun with clouds
+const skyFragSrc = `
+precision mediump float;
+varying vec2 v_position;
+void main() {
+    float y = v_position.y;
+    vec3 topColor = vec3(0.20, 0.08, 0.30);
+    vec3 midColor = vec3(0.90, 0.40, 0.50);
+    vec3 horizonColor = vec3(1.0, 0.60, 0.30);
+    vec3 bottomColor = vec3(1.0, 0.80, 0.40);
+    vec3 skyColor;
+    if (y > 0.3) skyColor = mix(midColor, topColor, (y - 0.3) / 0.7);
+    else if (y > -0.2) skyColor = mix(horizonColor, midColor, (y + 0.2) / 0.5);
+    else skyColor = mix(bottomColor, horizonColor, smoothstep(0.0, 1.0, (y + 1.0) / 0.8));
+    float cloud = sin(v_position.x * 8.0 + 2.0) * cos(v_position.y * 4.0) * 0.5 + 0.5;
+    cloud = smoothstep(0.6, 0.7, cloud) * 0.15;
+    if (y > -0.1 && y < 0.5) skyColor += vec3(cloud);
+    vec2 sunPos = vec2(0.0, 0.35);
+    float sunDist = length(v_position - sunPos);
+    float sunGlow = exp(-sunDist * 2.5) * 0.8;
+    float sunCore = smoothstep(0.12, 0.08, sunDist);
+    skyColor += vec3(1.0, 0.85, 0.5) * (sunGlow + sunCore);
+    gl_FragColor = vec4(skyColor, 1.0);
+}`;
+
+// ============================================================================
+// TEXTURE LOADING
+// EXAMPLES FROM: Week 7 Textures PPTx
+// ============================================================================
+
+// Loads a texture from an image URL
+function loadTexture(url) {
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    // Brown fallback color
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([101, 67, 33, 255]));
+    const image = new Image();
+    image.onload = () => {
+        console.log('Texture loaded successfully:', url);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.generateMipmap(gl.TEXTURE_2D);
+    };
+    image.onerror = () => {
+        console.error('Failed to load texture:', url);
+    };
+    image.src = url;
+    return texture;
+}
+
+// Load all texture files
+// Using various textures for terrain, metal surfaces, and train model
+const terrainTexture = loadTexture('rocky_terrain.jpg');
+const metalTexture = loadTexture('metal.jpg');
+const metal1Texture = loadTexture('metal-1.png');
+const rustyMetalTexture = loadTexture('rusty_metal.jpg');
+const ironTexture = loadTexture('metal.jpg');
+const blueTexture = loadTexture('blue.jpg');
+const trainWoodTexture = loadTexture('iron.jpg');
+const trainBlueTexture = loadTexture('metal.jpg');
+const trainBlackTexture = loadTexture('train_v1_L3.123c3acfa483-49b4-4f84-9678-fad31534bc9b/11709_train_wood_black_diff.jpg');
+
+// ============================================================================
+// MAIN SHADERS
+// MODIFIED FROM: Week 10 Lighting PPTx
+// ============================================================================
+const vertSrc = `
+attribute vec3 a_position,a_normal;attribute vec2 a_texcoord;
+uniform mat4 u_world,u_view,u_projection,u_normalMatrix;
+varying vec3 v_worldPos,v_normal;varying vec2 v_texcoord;varying float v_fogDepth;
+void main(){
+vec4 worldPos=u_world*vec4(a_position,1.0);
+v_worldPos=worldPos.xyz;v_normal=mat3(u_normalMatrix)*a_normal;v_texcoord=a_texcoord;
+vec4 viewPos=u_view*worldPos;v_fogDepth=-viewPos.z;gl_Position=u_projection*viewPos;
+}`;
+
+const fragSrc = `
+precision mediump float;
+varying vec3 v_worldPos,v_normal;varying vec2 v_texcoord;varying float v_fogDepth;
+uniform vec3 u_lightPos[10],u_lightColor[10],u_viewPos;
+uniform float u_lightIntensity[10];uniform vec3 u_color;uniform int u_useProcedural;
+uniform sampler2D u_terrainTexture,u_metalTexture,u_metal1Texture,u_rustyMetalTexture,u_ironTexture,u_blueTexture,u_trainWoodTexture,u_trainBlueTexture,u_trainBlackTexture;
+
+vec3 getProceduralColor(){
+if(u_useProcedural==0)return u_color;
+else if(u_useProcedural==1)return texture2D(u_terrainTexture,v_texcoord*4.0).rgb;
+else if(u_useProcedural==2){float g=sin(v_texcoord.x*40.0+sin(v_texcoord.y*30.0)*3.0);return mix(vec3(0.25,0.15,0.08),vec3(0.40,0.25,0.12),g*0.5+0.5);}
+else if(u_useProcedural==3){float noise=fract(sin(dot(v_texcoord*120.0,vec2(12.9898,78.233)))*43758.5453);return vec3(0.18,0.18,0.20)+vec3(noise*0.04);}
+else if(u_useProcedural==4)return texture2D(u_ironTexture,v_texcoord*2.0).rgb;
+else if(u_useProcedural==5){float noise=fract(sin(dot(v_texcoord*100.0,vec2(12.9898,78.233)))*43758.5453);return vec3(0.75,0.58,0.18)*(0.9+noise*0.1);}
+else if(u_useProcedural==6){gl_FragColor=vec4(1.0,0.95,0.70,1.0)*18.0;return vec3(0.0);}
+else if(u_useProcedural==7){float noise=fract(sin(dot(v_texcoord*80.0,vec2(12.9898,78.233)))*43758.5453);float g=sin(v_texcoord.x*30.0+sin(v_texcoord.y*20.0)*2.0);return mix(vec3(0.25,0.18,0.10),vec3(0.35,0.25,0.15),g*0.5+0.5)*(0.95+noise*0.05);}
+else if(u_useProcedural==8)return texture2D(u_metalTexture,v_texcoord*3.0).rgb;
+else if(u_useProcedural==9){float dist=length(v_texcoord-vec2(0.5));return dist>0.4?texture2D(u_metalTexture,v_texcoord).rgb:texture2D(u_trainBlackTexture,v_texcoord).rgb;}
+else if(u_useProcedural==10)return texture2D(u_blueTexture,v_texcoord*2.0).rgb;
+else if(u_useProcedural==11)return texture2D(u_trainWoodTexture,v_texcoord).rgb;
+else if(u_useProcedural==12)return texture2D(u_trainBlueTexture,v_texcoord).rgb;
+else if(u_useProcedural==13){vec3 color=texture2D(u_trainBlackTexture,v_texcoord).rgb;float brightness=(color.r+color.g+color.b)/3.0;if(brightness>0.5)return color*0.4;return color;}
+else if(u_useProcedural==14)return texture2D(u_metalTexture,v_texcoord*3.0).rgb;
+else if(u_useProcedural==15){vec3 originalColor=texture2D(u_trainBlackTexture,v_texcoord).rgb;float maxChannel=max(max(originalColor.r,originalColor.g),originalColor.b);return maxChannel>0.15?texture2D(u_metalTexture,v_texcoord).rgb:originalColor;}
+else if(u_useProcedural==16)return texture2D(u_rustyMetalTexture,v_texcoord).rgb;
+return u_color;
+}
+
+void main(){
+vec3 baseColor=getProceduralColor();if(u_useProcedural==6)return;
+vec3 normal=normalize(v_normal);vec3 viewDir=normalize(u_viewPos-v_worldPos);
+vec3 result=vec3(0.32,0.28,0.38)*0.7*baseColor;
+for(int i=0;i<10;i++){
+vec3 toLight=u_lightPos[i]-v_worldPos;vec3 lightDir=normalize(toLight);float dist=length(toLight);
+float spotAngle=dot(lightDir,-vec3(0.0,-1.0,0.0));float spotEffect=smoothstep(0.70,0.80,spotAngle);
+if(spotEffect>0.0){
+float attenuation=u_lightIntensity[i]/(1.0+0.25*dist+0.04*dist*dist)*spotEffect;
+float diff=max(dot(normal,lightDir),0.0);float spec=pow(max(dot(normal,normalize(lightDir+viewDir)),0.0),32.0);
+result+=(diff*u_lightColor[i]*attenuation+spec*u_lightColor[i]*attenuation*0.4+spotEffect*attenuation*0.12)*baseColor;
+}}
+float fogFactor=clamp((120.0-v_fogDepth)/105.0,0.0,1.0);
+gl_FragColor=vec4(mix(vec3(0.50,0.30,0.45),result,fogFactor),1.0);
+}`;
+
+// ============================================================================
+// PARTICLE SHADERS
+// Draws smoke puffs that rise and fade from the train chimney
+// ============================================================================
+const partVertSrc = `
+attribute vec3 a_position;attribute float a_alpha;uniform mat4 u_view,u_projection;varying float v_alpha;
+void main(){v_alpha=a_alpha;vec4 mvPosition=u_view*vec4(a_position,1.0);gl_Position=u_projection*mvPosition;gl_PointSize=40.0/-mvPosition.z;}
+`;
+
+const partFragSrc = `
+precision mediump float;varying float v_alpha;
+void main(){vec2 coord=gl_PointCoord-vec2(0.5);float dist=length(coord);if(dist>0.5)discard;
+gl_FragColor=vec4(0.98,0.96,0.94,(1.0-dist*2.0)*v_alpha*0.85);}
+`;
+
+// ============================================================================
+// SHADER COMPILATION
+// EXAMPLES FROM: Week 7 Library
+// ============================================================================
+
+// Compiles a single shader (vertex or fragment)
+function createShader(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('Shader error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+    }
+    return shader;
+}
+
+// Links vertex and fragment shaders into a complete program
+function createProgram(vs, fs) {
+    const prog = gl.createProgram();
+    gl.attachShader(prog, createShader(gl.VERTEX_SHADER, vs));
+    gl.attachShader(prog, createShader(gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        console.error('Program error:', gl.getProgramInfoLog(prog));
+        return null;
+    }
+    return prog;
+}
+
+// Compile all shader programs
+const program = createProgram(vertSrc, fragSrc);
+const skyProgram = createProgram(skyVertSrc, skyFragSrc);
+const particleProgram = createProgram(partVertSrc, partFragSrc);
+
+if (!program || !skyProgram || !particleProgram) {
+    alert('Shader compilation failed! Check console for errors.');
+    throw new Error('Shader compilation failed');
+}
+
+// ============================================================================
+// SKY SETUP
+// Creates a rectangle that covers the whole screen for the sky background
+// ============================================================================
+const skyQuad = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, skyQuad);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+// ============================================================================
+// OBJ FILE LOADER
+// ADAPTED FROM: Week 7 OBJ Loading examples
+// ============================================================================
+
+// Parses the text from a .obj file into vertex data
+function parseOBJ(text) {
+    const positions = [];
+    const texcoords = [];
+    const normals = [];
+    const groups = {};
+    let currentMaterial = 'default';
+    let currentGroup = 'default';
+    
+    const lines = text.split('\n');
+    for (const line of lines) {
+        const parts = line.trim().split(/\s+/);
+        if (parts[0] === 'v') {
+            positions.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])]);
+        } else if (parts[0] === 'vt') {
+            texcoords.push([parseFloat(parts[1]), parseFloat(parts[2])]);
+        } else if (parts[0] === 'vn') {
+            normals.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])]);
+        } else if (parts[0] === 'g') {
+            currentGroup = parts[1];
+        } else if (parts[0] === 'usemtl') {
+            currentMaterial = parts[1];
+        } else if (parts[0] === 'f') {
+            const key = currentGroup + '_' + currentMaterial;
+            if (!groups[key]) {
+                groups[key] = {vertexData: [], indexData: [], vertexMap: new Map(), group: currentGroup, material: currentMaterial};
+            }
+            const grp = groups[key];
+            const faceIndices = [];
+            for (let i = 1; i < parts.length; i++) {
+                const vertexKey = parts[i];
+                let index = grp.vertexMap.get(vertexKey);
+                if (index === undefined) {
+                    const [vIdx, vtIdx, vnIdx] = parts[i].split('/').map(s => parseInt(s) - 1);
+                    const pos = positions[vIdx] || [0, 0, 0];
+                    const tex = texcoords[vtIdx] || [0, 0];
+                    const norm = normals[vnIdx] || [0, 1, 0];
+                    grp.vertexData.push(...pos, ...norm, ...tex);
+                    index = grp.vertexMap.size;
+                    grp.vertexMap.set(vertexKey, index);
+                }
+                faceIndices.push(index);
+            }
+            if (faceIndices.length === 4) {
+                grp.indexData.push(faceIndices[0], faceIndices[1], faceIndices[2]);
+                grp.indexData.push(faceIndices[0], faceIndices[2], faceIndices[3]);
+            } else if (faceIndices.length === 3) {
+                grp.indexData.push(...faceIndices);
+            }
+        }
+    }
+    
+    const result = {wheels: {}, body: {}, chimney: null};
+    for (const key in groups) {
+        const grp = groups[key];
+        const positions2 = [], normals2 = [], texcoords2 = [];
+        
+        // For chimney parts, find the min Z to anchor the base
+        let minZ = Infinity;
+        if (grp.material === 'wood_black' && !grp.group.includes('wheel')) {
+            for (let i = 0; i < grp.vertexData.length; i += 8) {
+                minZ = Math.min(minZ, grp.vertexData[i+2]);
+            }
+        }
+        
+        for (let i = 0; i < grp.vertexData.length; i += 8) {
+            let x = grp.vertexData[i];
+            let y = grp.vertexData[i+1];
+            let z = grp.vertexData[i+2];
+            // Stretch chimney (wood_black material) vertically by 1.5x from its base
+            if (grp.material === 'wood_black' && !grp.group.includes('wheel')) {
+                z = minZ + (z - minZ) * 1.5;
+            }
+            positions2.push(x, y, z);
+            normals2.push(grp.vertexData[i+3], grp.vertexData[i+4], grp.vertexData[i+5]);
+            texcoords2.push(grp.vertexData[i+6], grp.vertexData[i+7]);
+        }
+        const data = {positions: positions2, normals: normals2, texcoords: texcoords2, indices: grp.indexData, material: grp.material};
+        
+        if (grp.group.includes('wheel')) {
+            result.wheels[key] = data;
+        } else if (grp.group.includes('chimney')) {
+            result.chimney = data;
+        } else {
+            result.body[key] = data;
+        }
+    }
+    
+    return result;
+}
+
+// Fetches an OBJ file from a URL and processes it
+function loadOBJ(url, callback) {
+    fetch(url)
+        .then(response => response.text())
+        .then(text => {
+            const parsed = parseOBJ(text);
+            const result = {wheels: {}, body: {}, chimney: null};
+            
+            for (const key in parsed.wheels) {
+                // Calculate wheel center from positions before creating buffers
+                const positions = parsed.wheels[key].positions;
+                let minX = Infinity, maxX = -Infinity;
+                let minY = Infinity, maxY = -Infinity;
+                let minZ = Infinity, maxZ = -Infinity;
+                for (let i = 0; i < positions.length; i += 3) {
+                    minX = Math.min(minX, positions[i]);
+                    maxX = Math.max(maxX, positions[i]);
+                    minY = Math.min(minY, positions[i + 1]);
+                    maxY = Math.max(maxY, positions[i + 1]);
+                    minZ = Math.min(minZ, positions[i + 2]);
+                    maxZ = Math.max(maxZ, positions[i + 2]);
+                }
+                const center = {
+                    x: (minX + maxX) / 2,
+                    y: (minY + maxY) / 2,
+                    z: (minZ + maxZ) / 2
+                };
+                
+                result.wheels[key] = createBuffers(parsed.wheels[key]);
+                result.wheels[key].material = parsed.wheels[key].material;
+                result.wheels[key].center = center;
+            }
+            for (const key in parsed.body) {
+                result.body[key] = createBuffers(parsed.body[key]);
+                result.body[key].material = parsed.body[key].material;
+            }
+            if (parsed.chimney) {
+                result.chimney = createBuffers(parsed.chimney);
+                result.chimney.material = parsed.chimney.material;
+            }
+            
+            callback(result);
+        })
+        .catch(err => console.error('Failed to load OBJ:', url, err));
+}
+
+// ============================================================================
+// SHAPE GENERATORS
+// EXAMPLES FROM: Week 6 Helper Functions
+// ============================================================================
+
+// Creates a 3D box with custom width, height, and depth
+function createBox(w=1, h=1, d=1) {
+    const x=w/2, y=h/2, z=d/2;
+    const positions = [
+        -x,-y,z, x,-y,z, x,y,z, -x,y,z,  // front
+        x,-y,-z, -x,-y,-z, -x,y,-z, x,y,-z,  // back
+        x,-y,z, x,-y,-z, x,y,-z, x,y,z,  // right
+        -x,-y,-z, -x,-y,z, -x,y,z, -x,y,-z,  // left
+        -x,y,z, x,y,z, x,y,-z, -x,y,-z,  // top
+        -x,-y,-z, x,-y,-z, x,-y,z, -x,-y,z  // bottom
+    ];
+    const normals = [
+        0,0,1, 0,0,1, 0,0,1, 0,0,1,  // front
+        0,0,-1, 0,0,-1, 0,0,-1, 0,0,-1,  // back
+        1,0,0, 1,0,0, 1,0,0, 1,0,0,  // right
+        -1,0,0, -1,0,0, -1,0,0, -1,0,0,  // left
+        0,1,0, 0,1,0, 0,1,0, 0,1,0,  // top
+        0,-1,0, 0,-1,0, 0,-1,0, 0,-1,0  // bottom
+    ];
+    const texcoords = [];
+    for (let i=0; i<6; i++) texcoords.push(0,0, 1,0, 1,1, 0,1);
+    const indices = [];
+    for (let i=0; i<6; i++) {
+        const v = i*4;
+        indices.push(v, v+1, v+2, v, v+2, v+3);
+    }
+    return {positions, normals, texcoords, indices};
+}
+
+// Creates a cylinder with custom radius, height, and smoothness
+function createCylinder(r=0.5, h=1, n=16) {
+    const pos=[],norm=[],tex=[],idx=[];
+    for(let i=0;i<=n;i++){const a=i/n*Math.PI*2,x=Math.cos(a)*r,z=Math.sin(a)*r;pos.push(x,-h/2,z,x,h/2,z);norm.push(Math.cos(a),0,Math.sin(a),Math.cos(a),0,Math.sin(a));tex.push(i/n,0,i/n,1);}
+    for(let i=0;i<n;i++){const a=i*2;idx.push(a,a+2,a+1,a+1,a+2,a+3);}
+    const tc=pos.length/3;pos.push(0,h/2,0,0,-h/2,0);norm.push(0,1,0,0,-1,0);tex.push(0.5,0.5,0.5,0.5);
+    for(let i=0;i<=n;i++){const a=i/n*Math.PI*2,x=Math.cos(a)*r,z=Math.sin(a)*r;pos.push(x,h/2,z,x,-h/2,z);norm.push(0,1,0,0,-1,0);tex.push(x/r*0.5+0.5,z/r*0.5+0.5,x/r*0.5+0.5,z/r*0.5+0.5);}
+    for(let i=0;i<n;i++){const t=tc+2+i*2,b=t+1;idx.push(tc,t,t+2,tc+1,b+2,b);}
+    return {positions:pos,normals:norm,texcoords:tex,indices:idx};
+}
+
+// Creates a sphere using latitude and longitude lines
+function createSphere(r=0.5, n=16) {
+    const pos=[], norm=[], tex=[], idx=[];
+    for(let lat=0; lat<=n; lat++) {
+        const theta=lat*Math.PI/n, st=Math.sin(theta), ct=Math.cos(theta);
+        for(let lon=0; lon<=n; lon++) {
+            const phi=lon*2*Math.PI/n, sp=Math.sin(phi), cp=Math.cos(phi);
+            const x=cp*st, y=ct, z=sp*st;
+            pos.push(r*x,r*y,r*z); norm.push(x,y,z); tex.push(lon/n,lat/n);
+        }
+    }
+    for(let lat=0; lat<n; lat++) for(let lon=0; lon<n; lon++) {
+        const f=lat*(n+1)+lon, s=f+n+1;
+        idx.push(f,s,f+1, s,s+1,f+1);
+    }
+    return {positions:pos, normals:norm, texcoords:tex, indices:idx};
+}
+
+// ============================================================================
+// HEIGHTMAP TERRAIN GENERATOR
+// Creates auto bumpy ground with hills and valleys using sine waves!
+// ============================================================================
+function createTerrain(w,d,seg,offZ=0){
+    const pos=[], norm=[], tex=[], idx=[];
+    for(let z=0; z<=seg; z++) for(let x=0; x<=seg; x++) {
+        const px=(x/seg-0.5)*w, lz=(z/seg)*d-d/2, wz=lz+offZ;
+        
+        // HEIGHTMAP CALCULATION: Combine multiple sine waves for natural terrain
+        const centerFlat = Math.exp(-Math.abs(px)*0.8);  // Flatten center for tracks
+        const sideHills = Math.sin(wz*0.1)*0.5 + Math.sin(wz*0.05)*1.0 + Math.sin(px*0.2)*0.3;  // Wave patterns
+        const height = sideHills * (1.0 - centerFlat * 0.98);  // Final value
+        
+        pos.push(px, height, lz);
+        tex.push(x/seg*8, z/seg*8);
+
+        const eps=0.1;  // test
+        const cf1 = Math.exp(-Math.abs(px-eps)*0.8);
+        const cf2 = Math.exp(-Math.abs(px+eps)*0.8);
+        const cf3 = Math.exp(-Math.abs(px)*0.8);
+        // Sample heightmap to left, right, down, up
+        const hL = (Math.sin(wz*0.1)*0.5+Math.sin(wz*0.05)*1.0+Math.sin((px-eps)*0.2)*0.3)*(1.0-cf1*0.98);
+        const hR = (Math.sin(wz*0.1)*0.5+Math.sin(wz*0.05)*1.0+Math.sin((px+eps)*0.2)*0.3)*(1.0-cf2*0.98);
+        const hD = (Math.sin((wz-eps)*0.1)*0.5+Math.sin((wz-eps)*0.05)*1.0+Math.sin(px*0.2)*0.3)*(1.0-cf3*0.98);
+        const hU = (Math.sin((wz+eps)*0.1)*0.5+Math.sin((wz+eps)*0.05)*1.0+Math.sin(px*0.2)*0.3)*(1.0-cf3*0.98);
+        // Calculate surface normal from height gradients
+        const nx=(hL-hR)/(2*eps), nz=(hD-hU)/(2*eps), len=Math.sqrt(nx*nx+1+nz*nz);
+        norm.push(nx/len, 1/len, nz/len);
+    }
+    for(let z=0; z<seg; z++) for(let x=0; x<seg; x++) {
+        const a=z*(seg+1)+x, b=a+1, c=(z+1)*(seg+1)+x, d=c+1;
+        idx.push(a,c,b, b,c,d);
+    }
+    return {positions:pos, normals:norm, texcoords:tex, indices:idx};
+}
+
+// Sends shape data to the GPU so it can be drawn
+function createBuffers(geom) {
+    const pb=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,pb); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(geom.positions),gl.STATIC_DRAW);
+    const nb=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,nb); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(geom.normals),gl.STATIC_DRAW);
+    const tb=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,tb); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(geom.texcoords),gl.STATIC_DRAW);
+    const useUint32 = geom.indices.some(i => i > 65535);
+    const indexArray = useUint32 ? new Uint32Array(geom.indices) : new Uint16Array(geom.indices);
+    const ib=gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indexArray,gl.STATIC_DRAW);
+    return {position:pb, normal:nb, texcoord:tb, indices:ib, numElements:geom.indices.length, indexType: useUint32 ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT};
+}
+
+// Pre-create common geometry buffers
+const buffers = {
+    box: createBuffers(createBox()),
+    cylinder: createBuffers(createCylinder(0.5,1,12)),
+    sphere: createBuffers(createSphere(0.5,16))
+};
+
+// ============================================================================
+// SCENE NODE CLASS
+// Organizes 3D objects in a hierarchy so moving a parent moves all children
+// ============================================================================
+
+// A container for 3D objects that can have children attached to it
+class SceneNode {
+    constructor() {
+        this.children=[]; 
+        this.localMatrix=mat4.create(); 
+        this.worldMatrix=mat4.create();
+        this.buffers=null; 
+        this.color=[1,1,1]; 
+        this.procType=0;
+    }
+    setBuffers(b) { this.buffers=b; return this; }
+    setColor(r,g,b) { this.color=[r,g,b]; return this; }
+    setProcedural(t) { this.procType=t; return this; }
+    addChild(c) { this.children.push(c); return c; }
+    updateWorldMatrix(p) {
+        p ? mat4.multiply(this.worldMatrix, p, this.localMatrix) : mat4.copy(this.worldMatrix, this.localMatrix);
+        this.children.forEach(c=>c.updateWorldMatrix(this.worldMatrix));
+    }
+    render(u) {
+        if(this.buffers) {
+            const nm=mat4.create(); mat4.invert(nm,this.worldMatrix); mat4.transpose(nm,nm);
+            gl.uniformMatrix4fv(u.u_world,false,this.worldMatrix);
+            gl.uniformMatrix4fv(u.u_normalMatrix,false,nm);
+            gl.uniform3fv(u.u_color,this.color);
+            gl.uniform1i(u.u_useProcedural,this.procType);
+            [['position',u.a_position,3],['normal',u.a_normal,3],['texcoord',u.a_texcoord,2]].forEach(([name,loc,size]) => {
+                gl.bindBuffer(gl.ARRAY_BUFFER,this.buffers[name]);
+                gl.enableVertexAttribArray(loc);
+                gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0);
+            });
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.buffers.indices);
+            gl.drawElements(gl.TRIANGLES,this.buffers.numElements,this.buffers.indexType||gl.UNSIGNED_SHORT,0);
+        }
+        this.children.forEach(c=>c.render(u));
+    }
+}
+
+// ============================================================================
+// TRAIN CREATION
+// Loads and assembles the 3D train model with spinning wheels
+// ============================================================================
+
+let trainModelBuffers = null;
+
+// Creates the train object with all its parts
+function createTrain() {
+    const train = new SceneNode();
+    train.wheelGroups = [];
+    train.chimneyPos = null;
+    
+    // Use loaded OBJ model if available
+    // Model is loaded asynchronously, so this might be null initially
+    if (trainModelBuffers) {
+        // Map material names from OBJ file to texture types
+        const materialTextures = {
+            'wood': 11,           // trainWoodTexture
+            'wood_dark_blue': 12, // trainBlueTexture
+            'wood_black': 13      // trainBlackTexture
+        };
+        
+        // Body parts (non-wheels) - stretch black parts (chimney) vertically
+        for (const key in trainModelBuffers.body) {
+            const model = new SceneNode();
+            const mat = trainModelBuffers.body[key].material;
+            mat4.translate(model.localMatrix, model.localMatrix, [0, 3.0, 0]);
+            mat4.rotate(model.localMatrix, model.localMatrix, -Math.PI / 2, [0, 1, 0]);
+            mat4.rotate(model.localMatrix, model.localMatrix, -Math.PI / 2, [1, 0, 0]);
+            mat4.scale(model.localMatrix, model.localMatrix, [0.3, 0.3, 0.3]);
+            // Use metal texture for chimney (wood_black), original textures for others
+            const texType = (mat === 'wood_black') ? 14 : (materialTextures[mat] || 11);
+            model.setBuffers(trainModelBuffers.body[key]).setProcedural(texType);
+            train.addChild(model);
+        }
+        
+        // Set up wheels with rotation hierarchy
+        // Each wheel needs its own rotation node so it can spin independently
+        train.wheelNodes = [];
+        for (const key in trainModelBuffers.wheels) {
+            const wheelData = trainModelBuffers.wheels[key];
+            const center = wheelData.center;
+            
+            if (!center) {
+                console.warn('No center for wheel:', key);
+                continue;
+            }
+            
+            // Container at wheel center in model space
+            const container = new SceneNode();
+            mat4.translate(container.localMatrix, container.localMatrix, [0, 3.0, 0]);
+            mat4.rotate(container.localMatrix, container.localMatrix, -Math.PI / 2, [0, 1, 0]);
+            mat4.rotate(container.localMatrix, container.localMatrix, -Math.PI / 2, [1, 0, 0]);
+            mat4.scale(container.localMatrix, container.localMatrix, [0.3, 0.3, 0.3]);
+            mat4.translate(container.localMatrix, container.localMatrix, [center.x, center.y, center.z]);
+            
+            // Rotator that will spin (Z-axis in model space = wheel axle after transforms)
+            const rotator = new SceneNode();
+            rotator.wheelCenter = center;
+            train.wheelNodes.push(rotator);
+            
+            // Wheel geometry offset from its center
+            const wheel = new SceneNode();
+            mat4.translate(wheel.localMatrix, wheel.localMatrix, [-center.x, -center.y, -center.z]);
+            const mat = wheelData.material;
+            const texType = materialTextures[mat] || 11;
+            wheel.setBuffers(wheelData).setProcedural(texType);
+            
+            rotator.addChild(wheel);
+            container.addChild(rotator);
+            train.addChild(container);
+        }
+        
+        // Chimney - track position for smoke
+        if (trainModelBuffers.chimney) {
+            const chimney = new SceneNode();
+            mat4.translate(chimney.localMatrix, chimney.localMatrix, [0, 3.0, 0]);
+            mat4.rotate(chimney.localMatrix, chimney.localMatrix, -Math.PI / 2, [0, 1, 0]);
+            mat4.rotate(chimney.localMatrix, chimney.localMatrix, -Math.PI / 2, [1, 0, 0]);
+            mat4.scale(chimney.localMatrix, chimney.localMatrix, [0.3, 0.3, 0.3]);
+            const mat = trainModelBuffers.chimney.material;
+            const texType = materialTextures[mat] || 11;
+            chimney.setBuffers(trainModelBuffers.chimney).setProcedural(texType);
+            train.addChild(chimney);
+            train.chimneyPos = [0, 8, 0]; // Approximate chimney top position
+        }
+    } else {
+        // Placeholder while model loads
+        const placeholder = new SceneNode();
+        mat4.translate(placeholder.localMatrix, placeholder.localMatrix, [0, 3.5, 0]);
+        mat4.scale(placeholder.localMatrix, placeholder.localMatrix, [1, 0.5, 2]);
+        placeholder.setBuffers(buffers.box).setProcedural(3);
+        train.addChild(placeholder);
+    }
+    
+    return train;
+}
+
+// ============================================================================
+// TRACK CREATION
+// Generates train track segments with rails and supports
+// ============================================================================
+
+// Creates one segment of train track
+function createTrackSet(zStart, length) {
+    const tracks = new SceneNode();
+    
+    // Deck, rails, and sleepers
+    const parts = [
+        {pos:[0,2.85,zStart+length/2], scale:[2.5,0.3,length], proc:8}, // deck
+        {pos:[-0.6,3.05,zStart+length/2], scale:[0.06,0.1,length], proc:8}, // left rail
+        {pos:[0.6,3.05,zStart+length/2], scale:[0.06,0.1,length], proc:8}  // right rail
+    ];
+    parts.forEach(p => {
+        const n = new SceneNode();
+        mat4.translate(n.localMatrix, n.localMatrix, p.pos);
+        mat4.scale(n.localMatrix, n.localMatrix, p.scale);
+        n.setBuffers(buffers.box).setProcedural(p.proc);
+        tracks.addChild(n);
+    });
+    
+    // Sleepers every 1.5 units with pillars every 3rd sleeper
+    for (let i = 0; i < Math.floor(length/1.5); i++) {
+        const z = zStart + i * 1.5;
+        const sleeper = new SceneNode();
+        mat4.translate(sleeper.localMatrix, sleeper.localMatrix, [0, 3.06, z]);
+        mat4.scale(sleeper.localMatrix, sleeper.localMatrix, [1.6, 0.12, 0.18]);
+        sleeper.setBuffers(buffers.box).setProcedural(2);
+        tracks.addChild(sleeper);
+        
+        // Pillars
+        if (i % 3 === 0) {
+            [-1,1].forEach(side => {
+                const pillar = new SceneNode();
+                mat4.translate(pillar.localMatrix, pillar.localMatrix, [side, -3, z]);
+                mat4.scale(pillar.localMatrix, pillar.localMatrix, [0.3, 12, 0.3]);
+                pillar.setBuffers(buffers.cylinder).setProcedural(7);
+                tracks.addChild(pillar);
+            });
+        }
+    }
+    return tracks;
+}
+
+// Creates a lamp post with a glowing light bulb on top
+function createLampPost() {
+    const lamp = new SceneNode();
+    const parts = [
+        {pos:[0,5,0], rot:null, scale:[0.06,16,0.06], buf:'cylinder', proc:3}, // pole
+        {pos:[0,13.3,0], rot:[Math.PI,1,0,0], scale:[0.35,0.4,0.35], buf:'box', proc:5}, // head
+        {pos:[0,12.9,0], rot:null, scale:[0.28,0.28,0.28], buf:'sphere', proc:6} // bulb
+    ];
+    parts.forEach(p => {
+        const n = new SceneNode();
+        mat4.translate(n.localMatrix, n.localMatrix, p.pos);
+        if(p.rot) mat4.rotate(n.localMatrix, n.localMatrix, p.rot[0], [p.rot[1],p.rot[2],p.rot[3]]);
+        mat4.scale(n.localMatrix, n.localMatrix, p.scale);
+        n.setBuffers(buffers[p.buf]).setProcedural(p.proc);
+        lamp.addChild(n);
+    });
+    return lamp;
+}
+
+// Creates a tree with a brown trunk and green leaves
+function createTree() {
+    const tree = new SceneNode();
+    const trunk = new SceneNode();
+    mat4.translate(trunk.localMatrix, trunk.localMatrix, [0, 1.5, 0]);
+    mat4.scale(trunk.localMatrix, trunk.localMatrix, [0.25, 3, 0.25]);
+    trunk.setBuffers(buffers.cylinder).setProcedural(2);
+    tree.addChild(trunk);
+    // Multiple leaf spheres for variety
+    [[0,3.5,0,1.6],[0.4,3.7,0.2,1.1],[-0.3,3.6,-0.2,1.2],[0,4.1,0,0.9]].forEach(([x,y,z,s]) => {
+        const leaves = new SceneNode();
+        mat4.translate(leaves.localMatrix, leaves.localMatrix, [x, y, z]);
+        mat4.scale(leaves.localMatrix, leaves.localMatrix, [s, s, s]);
+        leaves.setBuffers(buffers.sphere).setProcedural(1);
+        tree.addChild(leaves);
+    });
+    return tree;
+}
+
+// ============================================================================
+// WORLD SETUP
+// Builds the scene and places all objects
+// ============================================================================
+const scene = new SceneNode();
+
+// Create terrain tiles
+// Multiple terrain segments that regenerate as train moves forward
+const terrainTiles = [];
+const TERRAIN_SIZE = 100;
+for (let i = -7; i <= 7; i++) {
+    const terrainGeom = createTerrain(300, TERRAIN_SIZE, 40, i * TERRAIN_SIZE);
+    const terrainBuf = createBuffers(terrainGeom);
+    const terrainNode = new SceneNode();
+    mat4.translate(terrainNode.localMatrix, terrainNode.localMatrix, [0, -2, i * TERRAIN_SIZE]);
+    terrainNode.setBuffers(terrainBuf).setProcedural(1);
+    scene.addChild(terrainNode);
+    terrainTiles.push({node: terrainNode, z: i * TERRAIN_SIZE});
+}
+
+// Create long continuous track sections
+// Tracks regenerate ahead of train as it moves
+const TRACK_LENGTH = 105;
+const trackSets = [];
+for (let i = -6; i <= 6; i++) {
+    const tracks = createTrackSet(i * 100, TRACK_LENGTH);
+    scene.addChild(tracks);
+    trackSets.push({node: tracks, z: i * 100});
+}
+
+// Load train model and create train
+let train = createTrain();
+scene.addChild(train);
+
+// Load detailed train model from OBJ file
+// When loaded, replace placeholder with actual model
+loadOBJ('train_v1_L3.123c3acfa483-49b4-4f84-9678-fad31534bc9b/11709_train_v1_L3.obj', function(buffers) {
+    console.log('Train model loaded successfully', Object.keys(buffers));
+    trainModelBuffers = buffers;
+    // Recreate train with the loaded model
+    scene.children = scene.children.filter(c => c !== train);
+    train = createTrain();
+    scene.addChild(train);
+});
+
+// Place street lamps along the track
+// Spaced far apart to cover long distances
+const lamps = [];
+const LAMP_SPACING = 55; // Increased from 35
+for (let i = -20; i <= 20; i++) {
+    const lamp = createLampPost();
+    mat4.translate(lamp.localMatrix, lamp.localMatrix, [3.5, 3, i * LAMP_SPACING]);
+    scene.addChild(lamp);
+    lamps.push({node: lamp, z: i * LAMP_SPACING, lightPos: [3.5, 12.9, i * LAMP_SPACING]});
+}
+
+// Place trees randomly across terrain
+// Using seeded random for consistent placement
+const trees = [];
+const treePositions = [];
+let seed = 123;
+// Simple seeded random number generator from online examples
+function seededRandom() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280.0;
+}
+// Cover full terrain width (-150 to +150)
+for (let z = -20; z <= 20; z++) {
+    for (let side of [-1, 1]) {
+        if (seededRandom() > 0.35) { // More trees (65% chance)
+            const xBase = side * (8 + seededRandom() * 60); // x from 8 to 68 on each side
+            const zOffset = z * 12 + (seededRandom() - 0.5) * 10;
+            treePositions.push([xBase, 0, zOffset]);
+        }
+    }
+}
+treePositions.forEach(p => {
+    const tree = createTree();
+    mat4.translate(tree.localMatrix, tree.localMatrix, p);
+    scene.addChild(tree);
+    trees.push({node: tree, z: p[2], origX: p[0]});
+});
+
+// ============================================================================
+// SMOKE PARTICLE SYSTEM
+// Generates animated smoke rising from chimney
+// ============================================================================
+const smokeParticleCount = 400;
+const smokeParticles = [];
+
+// Represents one puff of smoke
+class Particle {
+    constructor() { this.pos=[0,0,0]; this.vel=[0,0,0]; this.life=0; this.maxLife=0; }
+    
+    // Initialize particle at spawn position with random velocity
+    spawn(x,y,z,spd) {
+        this.pos=[x,y,z];
+        this.vel=[(Math.random()-0.5)*0.4, Math.random()*0.6+0.4, (Math.random()-0.5)*0.4+spd*0.4];
+        this.maxLife=Math.random()*3.0+2.0; 
+        this.life=0;
+    }
+    update(dt) {
+        if(this.life>=this.maxLife) return false;
+        this.life+=dt;
+        for(let i=0;i<3;i++) this.pos[i]+=this.vel[i]*dt;
+        this.vel[1]+=0.25*dt; 
+        this.vel[0]*=0.98; 
+        this.vel[2]*=0.98;
+        return true;
+    }
+    getAlpha() { return Math.max(0, 1.0-this.life/this.maxLife); }
+}
+
+// Create pool of particle objects (reused for performance)
+for(let i=0; i<smokeParticleCount; i++) smokeParticles.push(new Particle());
+
+// Particle rendering buffers
+const smokePositions = new Float32Array(smokeParticleCount*3);
+const smokeAlpha = new Float32Array(smokeParticleCount);
+const smokePositionBuffer = gl.createBuffer();
+const smokeAlphaBuffer = gl.createBuffer();
+
+// ============================================================================
+// GAME STATE
+// Keeps track of train position, speed, camera mode, etc.
+// ============================================================================
+
+// Train state
+let trainPosition=0, trainSpeed=5, wheelRotation=0, currentCamera=1, isPaused=false, orbitAngle=0;
+
+// Free camera state (camera mode 5)
+let cameraPosition=[0,6,-5], cameraYaw=0, cameraPitch=-0.3;
+
+// Lighting setup - pre-initialize 10 light sources
+// Lights track nearest lamps to train position
+const lights = [];
+for(let i=0; i<10; i++) {
+    lights.push({
+        pos: lamps[i].lightPos.slice(),
+        color: [1, 0.85, 0.55],
+        intensity: 35
+    });
+}
+
+// ============================================================================
+// KEYBOARD AND MOUSE CONTROLS
+// ADAPTED FROM: Week 8 Camera Controls examples
+// ============================================================================
+const keys = {};
+window.addEventListener('keydown', event => {
+    keys[event.key.toLowerCase()] = true;
+    keys[event.key] = true;
+    if (event.key >= '1' && event.key <= '5') {
+        currentCamera = parseInt(event.key);
+        if (currentCamera === 5) { cameraPosition = [0, 6, trainPosition - 5]; cameraYaw = 0; cameraPitch = -0.3; }
+    }
+    if (event.key === ' ') { isPaused = !isPaused; event.preventDefault(); }
+    if (event.key.toLowerCase() === 'h') {
+        const info = document.getElementById('info');
+        const btn = document.getElementById('toggleInfo');
+        info.classList.toggle('hidden');
+        btn.textContent = info.classList.contains('hidden') ? 'Show Instructions' : 'Hide Instructions';
+    }
+});
+window.addEventListener('keyup', event => {
+    keys[event.key.toLowerCase()] = false;
+    keys[event.key] = false;
+});
+
+// Mouse controls for free camera mode
+let isDragging = false, lastMouseX = 0, lastMouseY = 0;
+canvas.addEventListener('mousedown', event => {
+    if (currentCamera === 5) { isDragging = true; lastMouseX = event.clientX; lastMouseY = event.clientY; }
+});
+canvas.addEventListener('mouseup', () => isDragging = false);
+canvas.addEventListener('mousemove', event => {
+    if (currentCamera === 5 && isDragging) {
+        const deltaX = event.clientX - lastMouseX, deltaY = event.clientY - lastMouseY;
+        cameraYaw -= deltaX * 0.005;
+        cameraPitch -= deltaY * 0.005;
+        cameraPitch = Math.max(-Math.PI/2 + 0.1, Math.min(Math.PI/2 - 0.1, cameraPitch));
+        lastMouseX = event.clientX; lastMouseY = event.clientY;
+    }
+});
+
+
+// ============================================================================
+// SHADER VARIABLES
+// Gets references to variables in the shader programs
+// ============================================================================
+
+// Collects all the shader variable locations
+function getUniforms(prog) {
+    return {
+        a_position: gl.getAttribLocation(prog, 'a_position'),
+        a_normal: gl.getAttribLocation(prog, 'a_normal'),
+        a_texcoord: gl.getAttribLocation(prog, 'a_texcoord'),
+        u_world: gl.getUniformLocation(prog, 'u_world'),
+        u_view: gl.getUniformLocation(prog, 'u_view'),
+        u_projection: gl.getUniformLocation(prog, 'u_projection'),
+        u_normalMatrix: gl.getUniformLocation(prog, 'u_normalMatrix'),
+        u_lightPos: gl.getUniformLocation(prog, 'u_lightPos'),
+        u_lightColor: gl.getUniformLocation(prog, 'u_lightColor'),
+        u_lightIntensity: gl.getUniformLocation(prog, 'u_lightIntensity'),
+        u_viewPos: gl.getUniformLocation(prog, 'u_viewPos'),
+        u_color: gl.getUniformLocation(prog, 'u_color'),
+        u_useProcedural: gl.getUniformLocation(prog, 'u_useProcedural'),
+        u_terrainTexture: gl.getUniformLocation(prog, 'u_terrainTexture'),
+        u_metalTexture: gl.getUniformLocation(prog, 'u_metalTexture'),
+        u_metal1Texture: gl.getUniformLocation(prog, 'u_metal1Texture'),
+        u_rustyMetalTexture: gl.getUniformLocation(prog, 'u_rustyMetalTexture'),
+        u_ironTexture: gl.getUniformLocation(prog, 'u_ironTexture'),
+        u_blueTexture: gl.getUniformLocation(prog, 'u_blueTexture'),
+        u_trainWoodTexture: gl.getUniformLocation(prog, 'u_trainWoodTexture'),
+        u_trainBlueTexture: gl.getUniformLocation(prog, 'u_trainBlueTexture'),
+        u_trainBlackTexture: gl.getUniformLocation(prog, 'u_trainBlackTexture')
+    };
+}
+const uniforms = getUniforms(program);
+
+// ============================================================================
+// ANIMATION LOOP
+// MODIFIED FROM: Week 10 Lighting + custom scene management
+// ============================================================================
+let lastTime = 0, smokeSpawnTimer = 0;
+
+function render(time) {
+    time *= 0.001;
+    const deltaTime = isPaused ? 0 : Math.min(time - lastTime, 0.05);
+    lastTime = time;
+    
+    // Update train speed based on arrow key input
+    if (keys['arrowup']) trainSpeed = Math.min(trainSpeed + deltaTime * 3, 20);
+    if (keys['arrowdown']) trainSpeed = Math.max(trainSpeed - deltaTime * 3, 0);
+    
+    // Move train forward and rotate wheels
+    trainPosition += trainSpeed * deltaTime;
+    wheelRotation -= trainSpeed * deltaTime * 3.5;
+    
+    mat4.identity(train.localMatrix);
+    mat4.translate(train.localMatrix, train.localMatrix, [0, 0, trainPosition]);
+    
+    // Rotate wheels around their own centers
+    if (train.wheelNodes) {
+        train.wheelNodes.forEach(rotator => {
+            mat4.identity(rotator.localMatrix);
+            // Rotate around Y-axis in reverse direction
+            mat4.rotate(rotator.localMatrix, rotator.localMatrix, -wheelRotation, [0, 1, 0]);
+        });
+    }
+    
+    // Infinite terrain - regenerate tiles that pass behind train
+    terrainTiles.forEach(tile => {
+        if (tile.z - trainPosition < -TERRAIN_SIZE * 2) {
+            tile.z += TERRAIN_SIZE * 15;
+            const terrainGeom = createTerrain(300, TERRAIN_SIZE, 40, tile.z);
+            const terrainBuf = createBuffers(terrainGeom);
+            tile.node.setBuffers(terrainBuf);
+            mat4.identity(tile.node.localMatrix);
+            mat4.translate(tile.node.localMatrix, tile.node.localMatrix, [0, -2, tile.z]);
+        }
+    });
+    
+    // Infinite tracks - regenerate sections that pass behind
+    trackSets.forEach(set => {
+        if (set.z - trainPosition < -150) {
+            set.z += 1300;
+            scene.children = scene.children.filter(c => c !== set.node);
+            const newTracks = createTrackSet(set.z, TRACK_LENGTH);
+            scene.addChild(newTracks);
+            set.node = newTracks;
+        }
+    });
+    
+    // Update lamps
+    lamps.forEach(lamp => {
+        if (lamp.z - trainPosition < -LAMP_SPACING * 10) {
+            lamp.z += LAMP_SPACING * 41;
+            mat4.identity(lamp.node.localMatrix);
+            mat4.translate(lamp.node.localMatrix, lamp.node.localMatrix, [3.5, 3, lamp.z]);
+            lamp.lightPos = [3.5, 12.9, lamp.z];
+        }
+    });
+    
+    // Update trees
+    trees.forEach(tree => {
+        if (tree.z - trainPosition < -250) {
+            tree.z += 500;
+            mat4.identity(tree.node.localMatrix);
+            mat4.translate(tree.node.localMatrix, tree.node.localMatrix, [tree.origX, 0, tree.z]);
+        }
+    });
+    
+    // Update dynamic lights to track nearest lamps
+    // Find 10 closest lamps and use their positions
+    let sortedLamps = lamps.map(l => ({ ...l, dist: Math.abs(l.z - trainPosition) })).sort((a, b) => a.dist - b.dist);
+    for (let i = 0; i < 10; i++) {
+        // Base position from lamp
+        lights[i].pos[0] = sortedLamps[i].lightPos[0];
+        lights[i].pos[1] = sortedLamps[i].lightPos[1];
+        lights[i].pos[2] = sortedLamps[i].lightPos[2];
+        lights[i].intensity = 35;
+    }
+    
+    // Update particle system - spawn and animate smoke
+    smokeSpawnTimer += deltaTime;
+    if (smokeSpawnTimer > 0.015) {
+        smokeSpawnTimer = 0;
+        for (let i = 0; i < 3; i++) {
+            const deadParticle = smokeParticles.find(p => p.life >= p.maxLife);
+            if (deadParticle) {
+                // Chimney smoke: spawn slightly higher up the chimney
+                deadParticle.spawn((Math.random() - 0.5) * 0.12, 5.2 + Math.random() * 0.06, trainPosition + 0.8 + (Math.random() - 0.5) * 0.15, trainSpeed);
+            }
+        }
+    }
+    smokeParticles.forEach(p => p.update(deltaTime));
+    
+    scene.updateWorldMatrix();
+    
+    // Camera setup - different modes provide different views
+    const view = mat4.create();
+    let eye = [0, 0, 0];
+    const camSettings = [
+        [[0,6.5,trainPosition-7],[0,4,trainPosition],[0,1,0]], // 1: follow
+        [[7,5.5,trainPosition],[0,4,trainPosition],[0,1,0]], // 2: side
+        [[0,15,trainPosition-4],[0,3,trainPosition],[0,0,1]], // 3: top
+    ];
+    if(currentCamera >= 1 && currentCamera <= 3) {
+        const s=camSettings[currentCamera-1];
+        eye=s[0]; mat4.lookAt(view, s[0], s[1], s[2]);
+    } else if (currentCamera === 4) {
+        orbitAngle += deltaTime * 0.5;
+        const r = 10;
+        eye = [Math.cos(orbitAngle)*r, 7, trainPosition+Math.sin(orbitAngle)*r];
+        mat4.lookAt(view, eye, [0,4,trainPosition], [0,1,0]);
+    } else if (currentCamera === 5) {
+        const moveSpeed = 8.0;
+        const forward = [Math.sin(cameraYaw), 0, Math.cos(cameraYaw)];
+        const right = [Math.cos(cameraYaw), 0, -Math.sin(cameraYaw)];
+        if (keys['w']) { cameraPosition[0] += forward[0]*moveSpeed*deltaTime; cameraPosition[2] += forward[2]*moveSpeed*deltaTime; }
+        if (keys['s']) { cameraPosition[0] -= forward[0]*moveSpeed*deltaTime; cameraPosition[2] -= forward[2]*moveSpeed*deltaTime; }
+        if (keys['a']) { cameraPosition[0] -= right[0]*moveSpeed*deltaTime; cameraPosition[2] -= right[2]*moveSpeed*deltaTime; }
+        if (keys['d']) { cameraPosition[0] += right[0] * moveSpeed * deltaTime; cameraPosition[2] += right[2] * moveSpeed * deltaTime; }
+        if (keys['q']) cameraPosition[1] -= moveSpeed * deltaTime;
+        if (keys['e']) cameraPosition[1] += moveSpeed * deltaTime;
+        const lookX = cameraPosition[0] + Math.sin(cameraYaw) * Math.cos(cameraPitch);
+        const lookY = cameraPosition[1] + Math.sin(cameraPitch);
+        const lookZ = cameraPosition[2] + Math.cos(cameraYaw) * Math.cos(cameraPitch);
+        eye = cameraPosition.slice();
+        mat4.lookAt(view, cameraPosition, [lookX, lookY, lookZ], [0, 1, 0]);
+    }
+    
+    const projection = mat4.create();
+    mat4.perspective(projection, Math.PI / 4, canvas.width / canvas.height, 0.1, 500);
+    
+    // ========================================
+    // RENDERING PASSES
+    // ========================================
+    
+    // Clear screen
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+    // Pass 1: Render sky background
+    gl.useProgram(skyProgram);
+    gl.bindBuffer(gl.ARRAY_BUFFER, skyQuad);
+    const skyPosLoc = gl.getAttribLocation(skyProgram, 'a_position');
+    gl.enableVertexAttribArray(skyPosLoc);
+    gl.vertexAttribPointer(skyPosLoc, 2, gl.FLOAT, false, 0, 0);
+    gl.depthMask(false);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    gl.depthMask(true);
+    
+    // Pass 2: Render main 3D scene with lighting
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
+    
+    gl.useProgram(program);
+    gl.uniformMatrix4fv(uniforms.u_view, false, view);
+    gl.uniformMatrix4fv(uniforms.u_projection, false, projection);
+    gl.uniform3fv(uniforms.u_viewPos, eye);
+    
+    // Pack light data into arrays for shader
+    const lightPosArray = new Float32Array(lights.flatMap(l=>l.pos));
+    const lightColorArray = new Float32Array(lights.flatMap(l=>l.color));
+    const lightIntensityArray = new Float32Array(lights.map(l=>l.intensity));
+    gl.uniform3fv(uniforms.u_lightPos, lightPosArray);
+    gl.uniform3fv(uniforms.u_lightColor, lightColorArray);
+    gl.uniform1fv(uniforms.u_lightIntensity, lightIntensityArray);
+    
+    // Bind all textures to their respective texture units
+    const textures = [terrainTexture, metalTexture, ironTexture, blueTexture, trainWoodTexture, trainBlueTexture, trainBlackTexture, metal1Texture, rustyMetalTexture];
+    const texNames = ['u_terrainTexture','u_metalTexture','u_ironTexture','u_blueTexture','u_trainWoodTexture','u_trainBlueTexture','u_trainBlackTexture','u_metal1Texture','u_rustyMetalTexture'];
+    textures.forEach((tex,i) => {
+        gl.activeTexture(gl.TEXTURE0+i);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.uniform1i(uniforms[texNames[i]], i);
+    });
+    
+    scene.render(uniforms);
+    
+    // Pass 3: Render particle system (smoke)
+    gl.useProgram(particleProgram);
+    gl.uniformMatrix4fv(gl.getUniformLocation(particleProgram, 'u_view'), false, view);
+    gl.uniformMatrix4fv(gl.getUniformLocation(particleProgram, 'u_projection'), false, projection);
+    
+    // Update particle buffers
+    smokeParticles.forEach((p,i) => {
+        smokePositions.set(p.pos, i*3);
+        smokeAlpha[i] = p.getAlpha();
+    });
+    
+    const aPosLoc = gl.getAttribLocation(particleProgram, 'a_position');
+    gl.bindBuffer(gl.ARRAY_BUFFER, smokePositionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, smokePositions, gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(aPosLoc);
+    gl.vertexAttribPointer(aPosLoc, 3, gl.FLOAT, false, 0, 0);
+    
+    const aAlphaLoc = gl.getAttribLocation(particleProgram, 'a_alpha');
+    gl.bindBuffer(gl.ARRAY_BUFFER, smokeAlphaBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, smokeAlpha, gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(aAlphaLoc);
+    gl.vertexAttribPointer(aAlphaLoc, 1, gl.FLOAT, false, 0, 0);
+    
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.depthMask(false);
+    gl.drawArrays(gl.POINTS, 0, smokeParticleCount);
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+    
+    requestAnimationFrame(render);
+}
+
+// ============================================================================
+// START APPLICATION
+// ============================================================================
+console.log('🚂 WebGL Train sim launching!!!');
+requestAnimationFrame(render);
+</script>
+</body>
+</html>
