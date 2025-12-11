@@ -83,15 +83,22 @@ Django-based web application providing centralized safety resources and real-tim
 Full-stack website for non-profit organization with focus on community engagement.
 
 **Technical Stack:**
+- React with TypeScript
+- Supabase for backend and authentication
 - Figma for UI/UX design
-- Modern frontend frameworks
+- Tailwind CSS with shadcn/ui components
 - Responsive design principles
 
-**Development Approach:**
-- Client collaboration and requirement gathering
-- Iterative design and development
-- Accessibility-first implementation
----
+**Key Features:**
+- Content management system for admin updates
+- User authentication and profiles
+- Event management and gallery
+- Donation integration
+- Community stories section
+
+**[Live Demo](https://spiderssuck.github.io/aww-demo/)** | **[Source Code](aww-demo/)**
+
+## 📚 Certifications & Education
 
 
  
