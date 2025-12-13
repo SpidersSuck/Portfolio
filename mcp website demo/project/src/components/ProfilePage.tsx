@@ -14,7 +14,6 @@ export function ProfilePage({ onBack, onSelectGame }: ProfilePageProps) {
   const recentGames = [
     { id: 'snake', name: 'Snake', lastPlayed: '2 hours ago', image: '/game-thumbnails/snake.svg' },
     { id: 'pacman', name: 'Pac-Man', lastPlayed: '3 hours ago', image: '/game-thumbnails/pacman.svg' },
-    { id: 'tetris', name: 'Tetris', lastPlayed: '5 hours ago', image: '/game-thumbnails/tetris.svg' },
     { id: 'memory', name: 'Memory Match', lastPlayed: '1 day ago', image: '/game-thumbnails/memory.svg' },
     { id: '2048', name: '2048', lastPlayed: '2 days ago', image: '/game-thumbnails/2048.svg' },
     { id: 'breakout', name: 'Breakout', lastPlayed: '3 days ago', image: '/game-thumbnails/breakout.svg' },
@@ -31,7 +30,6 @@ export function ProfilePage({ onBack, onSelectGame }: ProfilePageProps) {
 
   const highScores = [
   { game: 'Pac-Man', score: 18750, date: '2025-10-11', rank: '🥇' },
-  { game: 'Tetris', score: 12500, date: '2025-10-09', rank: '🥈' },
   { game: 'Breakout', score: 8900, date: '2025-10-08', rank: '🥉' },
   { game: 'Snake', score: 450, date: '2025-10-10', rank: '' },
   { game: '2048', score: 2048, date: '2025-10-07', rank: '' },

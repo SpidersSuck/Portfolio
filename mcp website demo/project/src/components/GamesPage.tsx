@@ -76,33 +76,9 @@ const allGames: Game[] = [
     features: ['Arcade', 'Power-ups', 'Levels', 'Classic', 'Action'],
     image: '/game-thumbnails/breakout.svg'
   },
-  { 
-    id: 'tetris', 
-    title: 'Tetris', 
-    description: 'Stack blocks to clear lines in this timeless puzzle game', 
-    icon: Blocks, 
-    gradient: 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)', 
-    category: 'puzzle', 
-    difficulty: 'medium',
-    rating: 4.9,
-    playtime: '12 min',
-    features: ['Puzzle', 'Classic', 'Stacking', 'Endless', 'Retro'],
-    image: '/game-thumbnails/tetris.svg'
-  },
+  // Tetris removed
   // Flappy Bird removed
-  { 
-    id: 'winter-bells', 
-    title: 'Winter Bells', 
-    description: 'Click bells to keep the rabbit bouncing higher in this peaceful winter game', 
-    icon: Snowflake, 
-    gradient: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)', 
-    category: 'casual', 
-    difficulty: 'easy',
-    rating: 4.7,
-    playtime: '10 min',
-    features: ['Casual', 'Relaxing', 'Combo System', 'Musical', 'Peaceful'],
-    image: '/game-thumbnails/winterbells.svg'
-  },
+  // Winter Bells removed
   // Space Invaders removed
   { 
     id: 'asteroids', 
