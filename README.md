@@ -10,8 +10,9 @@ Full-stack developer specializing in web applications, AI development workflows,
 
 
 **[MCP Website Demo](https://spiderssuck.github.io/Portfolio/)** - Multi-agent AI coordination platform with Model Context Protocol integration, featuring automated development workflow and real-time context synchronization
+**[A Woman's Worth Community Live Deployment](https://awomansworth.co/)** - Thelive and deployed Non-profit community website with modern design and accessibility features
 
-**[A Woman's Worth Community](https://spiderssuck.github.io/aww-demo/)** - Non-profit community website with modern design and accessibility features
+**[A Woman's Worth Community (Figma Prototype)](https://spiderssuck.github.io/aww-demo/)** - The figma prototype for the Non-profit community website 
 
 **[WebGL Train Scene Demo](https://spiderssuck.github.io/WEB-GL-Moving-Train-Demo/index.html)** - Interactive 3D train simulation built with pure WebGL and JavaScript
 
