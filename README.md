@@ -2,7 +2,7 @@
 
 Full-stack developer specializing in web applications, AI development workflows, and modern JavaScript frameworks. Computer Science: Graduated from Washington State University.
 ## 📚 Certifications & Education
-🎓 **NVIDIA Certified - Deep Learning Fundamentals**  
+🎓 [**NVIDIA Certified - Deep Learning Fundamentals**](https://github.com/SpidersSuck/Portfolio/blob/main/My%20Learning%20_%20NVIDIA.pdf)  
 🎓 **Bachelor of Science in Computer Science** - Washington State University: Graduated May 9 2026
 
 ## 🌐 Live Projects
